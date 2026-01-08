@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import useAuth from '../../auth/hook/useAuth';
-import Button from '../../shared/components/Button';
+import Button from '../components/Button';
 
 function Dashboard() {
   const [openMenu, setOpenMenu] = useState(false);
