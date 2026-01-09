@@ -7,6 +7,7 @@ import PublicLayout from "./modules/shared/layouts/PublicLayout";
 
 import LoginPage from "./modules/auth/pages/LoginPage";
 import HomePage from "./modules/public/pages/HomePage";
+import Inicio from "./modules/shared/components/Inicio";
 
 function NotFound() {
   return <h2 style={{ padding: 24 }}>404 - Página no encontrada</h2>;
@@ -20,7 +21,7 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <PublicLayout />,
+      element: <Inicio />,
       errorElement: <RouterError />,
       children: [
         { index: true, element: <HomePage /> },

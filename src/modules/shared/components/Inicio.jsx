@@ -1,5 +1,5 @@
 import React from "react";
-import Restaurant from "../../public/Restaurant.jpg";
+import Restaurant from "../../../assets/Restaurant.jpg";
 
 const Inicio = () => {
   return (
@@ -11,7 +11,7 @@ const Inicio = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 m-5 p-5 max-w-6xl mx-auto px-8">
           <div>
             <img
-              className="w-full h-auto rounded-xl object-cover"
+              className="w-full h-auto rounded-xl object-cover transition-transform duration-300 ease-in-out hover:scale-105"
               src={Restaurant}
               alt="fondo restaurant"
             />
