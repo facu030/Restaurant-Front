@@ -54,11 +54,83 @@ const Inicio = () => {
           </div>
         </div>
       </main>
-      <footer>
-        <p className="text-center bg-gray-900 text-white py-5">
-          &copy;Todos los derechos reservados
-        </p>
-      </footer>
+      <footer className="bg-neutral-900 text-white pt-5 pb-10">
+  <div className="container mx-auto px-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
+      <div className="flex justify-center md:justify-start"></div>
+      <div>
+        <h5 className="text-gray-100 font-bold mb-2 text-xl">
+          Nuestra Carta
+        </h5>
+        <ul className="list-none p-0 m-0">
+          <li>
+            <a
+              href=""
+              className="text-gray-100 no-underline hover:text-white transition-colors"
+            >
+              Entradas
+            </a>
+          </li>
+          <li>
+            <a
+              href=""
+              className="text-gray-100 no-underline hover:text-white transition-colors"
+            >
+              Platos Principales
+            </a>
+          </li>
+          <li>
+            <a
+              href=""
+              className="text-gray-100 no-underline hover:text-white transition-colors"
+            >
+              Postres
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h5 className="text-gray-100 font-bold mb-2 text-xl">Reservas</h5>
+        <ul className="list-none p-0 m-0">
+          <li>
+            <a
+              href=""
+              className="text-gray-100 no-underline hover:text-white transition-colors"
+            >
+              Reservar Mesa
+            </a>
+          </li>
+          <li>
+            <a
+              href=""
+              className="text-gray-100 no-underline hover:text-white transition-colors"
+            >
+              Eventos
+            </a>
+          </li>
+          <li>
+            <a
+              href=""
+              className="text-gray-100 no-underline hover:text-white transition-colors"
+            >
+              Contacto
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h5 className="text-gray-100 font-bold mb-2 text-xl">
+          Restaurante Pro
+        </h5>
+        <ul className="list-none p-0 m-0">
+          <li className="text-gray-100 text-sm mb-2">
+            Seguinos en nuestras redes:
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
     </div>
   );
 };
