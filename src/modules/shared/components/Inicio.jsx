@@ -55,82 +55,104 @@ const Inicio = () => {
         </div>
       </main>
       <footer className="bg-neutral-900 text-white pt-5 pb-10">
-  <div className="container mx-auto px-4">
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
-      <div className="flex justify-center md:justify-start"></div>
-      <div>
-        <h5 className="text-gray-100 font-bold mb-2 text-xl">
-          Nuestra Carta
-        </h5>
-        <ul className="list-none p-0 m-0">
-          <li>
-            <a
-              href=""
-              className="text-gray-100 no-underline hover:text-white transition-colors"
-            >
-              Entradas
-            </a>
-          </li>
-          <li>
-            <a
-              href=""
-              className="text-gray-100 no-underline hover:text-white transition-colors"
-            >
-              Platos Principales
-            </a>
-          </li>
-          <li>
-            <a
-              href=""
-              className="text-gray-100 no-underline hover:text-white transition-colors"
-            >
-              Postres
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <h5 className="text-gray-100 font-bold mb-2 text-xl">Reservas</h5>
-        <ul className="list-none p-0 m-0">
-          <li>
-            <a
-              href=""
-              className="text-gray-100 no-underline hover:text-white transition-colors"
-            >
-              Reservar Mesa
-            </a>
-          </li>
-          <li>
-            <a
-              href=""
-              className="text-gray-100 no-underline hover:text-white transition-colors"
-            >
-              Eventos
-            </a>
-          </li>
-          <li>
-            <a
-              href=""
-              className="text-gray-100 no-underline hover:text-white transition-colors"
-            >
-              Contacto
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <h5 className="text-gray-100 font-bold mb-2 text-xl">
-          Restaurante Pro
-        </h5>
-        <ul className="list-none p-0 m-0">
-          <li className="text-gray-100 text-sm mb-2">
-            Seguinos en nuestras redes:
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</footer>
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="flex flex-col items-center"></div>
+            <div className="flex flex-col items-center">
+              <h5 className="text-gray-100 font-bold mb-2 text-xl text-center">
+                Nuestra Carta
+              </h5>
+              <ul className="list-none p-0 text-center">
+                <li className="mb-1">
+                  <a
+                    href=""
+                    className="text-gray-100 no-underline text-base hover:text-white"
+                  >
+                    Entradas
+                  </a>
+                </li>
+                <li className="mb-1">
+                  <a
+                    href=""
+                    className="text-gray-100 no-underline text-base hover:text-white"
+                  >
+                    Platos Principales
+                  </a>
+                </li>
+                <li className="mb-1">
+                  <a
+                    href=""
+                    className="text-gray-100 no-underline text-base hover:text-white"
+                  >
+                    Postres
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div className="flex flex-col items-center">
+              <h5 className="text-gray-100 font-bold mb-2 text-xl text-center">
+                Reservas
+              </h5>
+              <ul className="list-none p-0 text-center">
+                <li className="mb-1">
+                  <a
+                    href=""
+                    className="text-gray-100 no-underline text-base hover:text-white"
+                  >
+                    Reservar Mesa
+                  </a>
+                </li>
+                <li className="mb-1">
+                  <a
+                    href=""
+                    className="text-gray-100 no-underline text-base hover:text-white"
+                  >
+                    Eventos
+                  </a>
+                </li>
+                <li className="mb-1">
+                  <a
+                    href=""
+                    className="text-gray-100 no-underline text-base hover:text-white"
+                  >
+                    Contacto
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div className="flex flex-col items-center">
+              <h5 className="text-gray-100 font-bold mb-2 text-xl text-center">
+                Restaurante
+              </h5>
+              <ul className="list-none p-0 text-center">
+                <li className="text-gray-100 mb-2 text-base">
+                  Seguinos en nuestras redes:
+                </li>
+                <div className="flex justify-center items-center gap-3">
+                  <a
+                    href=""
+                    className="text-gray-100 hover:scale-110 transition-transform"
+                  >
+                    <i className="bi bi-instagram text-2xl"></i>
+                  </a>
+                  <a
+                    href=""
+                    className="text-gray-100 hover:scale-110 transition-transform"
+                  >
+                    <i className="bi bi-twitter text-2xl"></i>
+                  </a>
+                  <a
+                    href=""
+                    className="text-gray-100 hover:scale-110 transition-transform"
+                  >
+                    <i className="bi bi-facebook text-2xl"></i>
+                  </a>
+                </div>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
