@@ -5,6 +5,7 @@ const Inicio = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-grow">
+        <section id="quienes-somos" className="scroll-mt-24">
         <h1 className="text-center my-5 text-3xl font-semibold mb-6">
           Quiénes Somos
         </h1>
@@ -53,6 +54,7 @@ const Inicio = () => {
             </div>
           </div>
         </div>
+        </section>
       </main>
       <footer className="bg-neutral-900 text-white pt-5 pb-10">
         <div className="container mx-auto px-4">
@@ -60,15 +62,15 @@ const Inicio = () => {
             <div className="flex flex-col items-center"></div>
             <div className="flex flex-col items-center">
               <h5 className="text-gray-100 font-bold mb-2 text-xl text-center">
-                Nuestra Carta
+                Secciones
               </h5>
               <ul className="list-none p-0 text-center">
                 <li className="mb-1">
                   <a
-                    href=""
+                    href="#quienes-somos"
                     className="text-gray-100 no-underline text-base hover:text-white"
                   >
-                    Entradas
+                    Quienes Somos
                   </a>
                 </li>
                 <li className="mb-1">
@@ -76,7 +78,7 @@ const Inicio = () => {
                     href=""
                     className="text-gray-100 no-underline text-base hover:text-white"
                   >
-                    Platos Principales
+                    Galeria
                   </a>
                 </li>
                 <li className="mb-1">
@@ -84,7 +86,7 @@ const Inicio = () => {
                     href=""
                     className="text-gray-100 no-underline text-base hover:text-white"
                   >
-                    Postres
+                    Contacto
                   </a>
                 </li>
               </ul>
@@ -99,7 +101,7 @@ const Inicio = () => {
                     href=""
                     className="text-gray-100 no-underline text-base hover:text-white"
                   >
-                    Reservar Mesa
+                    Mis Reservas
                   </a>
                 </li>
                 <li className="mb-1">
@@ -107,15 +109,7 @@ const Inicio = () => {
                     href=""
                     className="text-gray-100 no-underline text-base hover:text-white"
                   >
-                    Eventos
-                  </a>
-                </li>
-                <li className="mb-1">
-                  <a
-                    href=""
-                    className="text-gray-100 no-underline text-base hover:text-white"
-                  >
-                    Contacto
+                    Admin
                   </a>
                 </li>
               </ul>
