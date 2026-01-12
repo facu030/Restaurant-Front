@@ -9,20 +9,20 @@ export const login = async (username, password) => {
 export const login = async (username, password) => {
   await new Promise((r) => setTimeout(r, 300));
 
-  // usuarios mock
+  // usuarios mock con rol
   const users = [
-    { username: "admin", password: "admin123" },
-    { username: "user", password: "user123" },
+    { username: "admin", password: "admin123", role: "Admin" },
+    { username: "user", password: "user123", role: "User" },
   ];
 
-  const ok = users.some((u) => u.username === username && u.password === password);
+  const user = users.find((u) => u.username === username && u.password === password);
 
-  if (!ok) {
+  if (!user) {
     return { data: null, error: "Credenciales inválidas" };
   }
 
-  // token mock (string)
+  // token mock (string) + role
   const token = btoa(JSON.stringify({ sub: username, iat: Date.now() }));
 
-  return { data: token, error: null };
+  return { data: { token, role: user.role, username: user.username }, error: null };
 };
