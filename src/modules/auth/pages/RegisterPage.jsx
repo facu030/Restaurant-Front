@@ -28,7 +28,7 @@ function RegisterPage() {
             </div>
 
             <div className="mb-6 hidden md:block">
-               <h2 className="text-3xl font-extrabold text-gray-900">Crear Cuenta</h2>
+               <h2 className="text-3xl font-extrabold text-white">Crear Cuenta</h2>
                <p className="text-gray-500 text-sm mt-1">
                  Regístrate para gestionar tus reservas fácilmente.
                </p>

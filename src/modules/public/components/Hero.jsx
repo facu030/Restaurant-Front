@@ -4,13 +4,14 @@ import heroImage from "../../../assets/facuimg/Logo-hero.png";
 const Hero = () => {
   return (
     <section 
-      className="relative bg-cover bg-center bg-no-repeat py-32 sm:py-48 lg:py-60"
+    id="hero"
+      className="relative w-full h-[calc(100dvh-80px)] bg-cover bg-center bg-no-repeat py-32 sm:py-48 lg:py-60 mb-15 pb-15 "
       style={{ backgroundImage: `url(${heroImage})` }}
     >
       <div className="absolute inset-0 bg-black/60 sm:bg-black/50"></div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6 drop-shadow-lg">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-yellow-600 mb-5 drop-shadow-lg">
           CosaNostra
         </h1>
 

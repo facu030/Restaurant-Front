@@ -143,4 +143,6 @@ input[type="number"]::-webkit-outer-spin-button {
 /* Asegurar que los componentes que dependían de clases duplicadas mantengan prioridad */
 .force-card { background-color: var(--card) !important; color: var(--text) !important; }
 
-/* Fin del archivo consolidado */
+html {
+  scroll-behavior: smooth;
+}

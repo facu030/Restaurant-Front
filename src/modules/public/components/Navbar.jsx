@@ -96,13 +96,13 @@ const Navbar = () => {
 
           {/* Links desktop */}
           <div className="hidden md:flex items-center space-x-6">
-            <a href="#about" className={linkClass}>
+            <a href="/#quienes-somos" className={linkClass}>
               Quiénes somos
             </a>
-            <a href="#gallery" className={linkClass}>
+            <a href="/#galeria" className={linkClass}>
               Galería de imágenes
             </a>
-            <a href="#contact" className={linkClass}>
+            <a href="/#contacto" className={linkClass}>
               Contacto
             </a>
             {isAuthenticated && (
@@ -151,21 +151,21 @@ const Navbar = () => {
         <div className="px-4 py-4">
           <nav className="flex flex-col gap-2">
             <a
-              href="#about"
+              href="/#quienes-somos"
               className={linkClass}
               onClick={() => setOpenMenu(false)}
             >
               Quiénes somos
             </a>
             <a
-              href="#gallery"
+              href="/#galeria"
               className={linkClass}
               onClick={() => setOpenMenu(false)}
             >
               Galería de imágenes
             </a>
             <a
-              href="#contact"
+              href="/#contacto"
               className={linkClass}
               onClick={() => setOpenMenu(false)}
             >

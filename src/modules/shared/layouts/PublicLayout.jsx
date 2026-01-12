@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '../../public/components/Navbar'; 
-
+import Footer from '../../public/components/Footer'; 
 
 const PublicLayout = () => {
   return (
@@ -8,13 +8,11 @@ const PublicLayout = () => {
       <Navbar />
 
       <main className="flex-grow">
-        {/* Aquí se cargará el Home, Login, etc */}
+        {/* Aquí se cargará el Home, Login, Reservas, etc */}
         <Outlet />
       </main>
 
-      <footer className="bg-gray-200 text-center p-4">
-        Pie de página
-      </footer>
+      <Footer /> 
     </div>
   );
 };
