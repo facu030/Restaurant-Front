@@ -1,6 +1,6 @@
 //get, post, put, delete
 
-const urlreservas = import.meta.env.development.VITE_API_RESERVA;
+const urlreservas = import.meta.env.VITE_API_RESERVA;
 
 console.log(urlreservas);
 

@@ -13,7 +13,7 @@ const MisReservasPage = () => {
 
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
     // 1. Si no está autenticado, redirigir
     if (isAuthenticated === false) {
