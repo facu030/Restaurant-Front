@@ -40,7 +40,7 @@ export const crearReserva = async (reservaNueva) => {
   }
 };
 
-export const editarReservaPorId = async (reservaEditada, id) => {
+export const editarReservaPorId = async (id, reservaEditada) => {
   try {
     const respuesta = await fetch(urlreservas + `/${id}`, {
       method: "PUT",

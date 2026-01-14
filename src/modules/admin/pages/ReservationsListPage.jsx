@@ -2,7 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import ReservationListTable from "../../reservations/components/ReservationListTable";
 import ReservationForm from "../../reservations/components/ReservationForm";
 import Modal from "../../shared/components/Modal";
-import { borrarReservaPorId, leerReservas } from "../helpers/queries.js";
+import {
+  borrarReservaPorId,
+  editarReservaPorId,
+  leerReservas,
+} from "../helpers/queries.js";
 
 function StatCard({ title, value, valueClassName = "" }) {
   return (
@@ -103,8 +107,9 @@ function ReservationsListPage() {
     return { total, confirmed, pending, canceled };
   }, [listaReservas]);
 
-  const handleEdit = (id) => {
+  const handleEdit = async (id) => {
     const reserva = listaReservas.find((r) => r.id === id);
+    if (!reserva) return;
     setEditing(reserva);
     setOpenEdit(true);
   };
@@ -118,20 +123,35 @@ function ReservationsListPage() {
     await borrarReservas({ _id: reserva.id });
   };
 
-  const handleSaveEdit = async (formData) => {
-    try {
-      setSaving(true);
+const handleSaveEdit = async (formData) => {
+  try {
+    setSaving(true);
 
-      setListaReservas((prev) =>
-        prev.map((r) => (r.id === editing.id ? { ...r, ...formData } : r))
-      );
+    const payload = {
+      nombreCompleto: formData.clientName,
+      email: formData.email,
+      fecha: formData.date,
+      hora: formData.time,
+      personas: formData.pax,
+      estado: formData.status,
+    };
 
-      setOpenEdit(false);
-      setEditing(null);
-    } finally {
-      setSaving(false);
-    }
-  };
+    // 🔹 editarReservaPorId devuelve JSON, no Response
+    await editarReservaPorId(editing.id, payload);
+
+    // 🔹 Si no tiró error, asumimos OK
+    await obtenerReservas();
+    setOpenEdit(false);
+    setEditing(null);
+  } catch (error) {
+    console.error("Error al editar la reserva", error);
+  } finally {
+    setSaving(false);
+  }
+};
+
+
+
 
   return (
     <div className="space-y-6">
