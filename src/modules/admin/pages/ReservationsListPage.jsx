@@ -2,12 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import ReservationListTable from "../../reservations/components/ReservationListTable";
 import ReservationForm from "../../reservations/components/ReservationForm";
 import Modal from "../../shared/components/Modal";
-
-import {
-  updateReservation,
-  deleteReservation,
-} from "../../reservations/services/reservationService";
-import { leerReservas } from "../helpers/queries.js";
+import { borrarReservaPorId, leerReservas } from "../helpers/queries.js";
 
 function StatCard({ title, value, valueClassName = "" }) {
   return (
@@ -19,7 +14,7 @@ function StatCard({ title, value, valueClassName = "" }) {
 }
 
 function ReservationsListPage() {
-  const [reservations, setReservations] = useState([]); // ← no lo borro
+  const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
@@ -34,6 +29,15 @@ function ReservationsListPage() {
   useEffect(() => {
     obtenerReservas();
   }, []);
+
+  const borrarReservas = async (reserva) => {
+    const respuesta = await borrarReservaPorId(reserva._id);
+    if (respuesta.status === 200) {
+      obtenerReservas();
+    } else {
+      console.error("Error al borrar la reserva");
+    }
+  };
 
   const obtenerReservas = async () => {
     const respuesta = await leerReservas();
@@ -108,8 +112,10 @@ function ReservationsListPage() {
   const handleDelete = async (id) => {
     if (!confirm("¿Seguro que querés eliminar esta reserva?")) return;
 
-    await deleteReservation(id);
-    setListaReservas((prev) => prev.filter((r) => r.id !== id));
+    const reserva = listaReservas.find((r) => r.id === id);
+    if (!reserva) return;
+
+    await borrarReservas({ _id: reserva.id });
   };
 
   const handleSaveEdit = async (formData) => {
