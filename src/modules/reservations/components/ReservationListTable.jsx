@@ -12,8 +12,14 @@ function badgeClasses(status) {
 }
 
 function formatDate(iso) {
-  const [y, m, d] = iso.split("-");
-  return `${d}/${m}/${y}`;
+  const date = new Date(iso);
+
+  return date.toLocaleDateString("es-AR", {
+    timeZone: "UTC",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 }
 
 export default function ReservationListTable({

@@ -123,35 +123,28 @@ function ReservationsListPage() {
     await borrarReservas({ _id: reserva.id });
   };
 
-const handleSaveEdit = async (formData) => {
-  try {
-    setSaving(true);
+  const handleSaveEdit = async (formData) => {
+    try {
+      setSaving(true);
 
-    const payload = {
-      nombreCompleto: formData.clientName,
-      email: formData.email,
-      fecha: formData.date,
-      hora: formData.time,
-      personas: formData.pax,
-      estado: formData.status,
-    };
-
-    // 🔹 editarReservaPorId devuelve JSON, no Response
-    await editarReservaPorId(editing.id, payload);
-
-    // 🔹 Si no tiró error, asumimos OK
-    await obtenerReservas();
-    setOpenEdit(false);
-    setEditing(null);
-  } catch (error) {
-    console.error("Error al editar la reserva", error);
-  } finally {
-    setSaving(false);
-  }
-};
-
-
-
+      const payload = {
+        nombreCompleto: formData.clientName,
+        email: formData.email,
+        fecha: formData.date,
+        hora: formData.time,
+        personas: formData.pax,
+        estado: formData.status,
+      };
+      await editarReservaPorId(editing.id, payload);
+      await obtenerReservas();
+      setOpenEdit(false);
+      setEditing(null);
+    } catch (error) {
+      console.error("Error al editar la reserva", error);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="space-y-6">

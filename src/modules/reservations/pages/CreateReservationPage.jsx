@@ -88,11 +88,11 @@ export default function CreateReservationPage() {
 
     // Preparar el objeto para enviar
     const reservationData = {
-      date,
-      time: selectedTime,
-      pax,
-      clientName: name,
+      nombreCompleto: name,
       email,
+      fecha: date,
+      hora: selectedTime,
+      personas: pax,
     };
 
     // Llamada al servicio
