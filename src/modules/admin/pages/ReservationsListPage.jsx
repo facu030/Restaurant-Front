@@ -2,21 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import ReservationListTable from '../../reservations/components/ReservationListTable';
 import ReservationForm from '../../reservations/components/ReservationForm';
 import Modal from '../../shared/components/Modal';
+import ReservationStatsCards from '../../reservations/components/ReservationStatsCards';
 
 import {
   getReservations,
   updateReservation,
   deleteReservation,
 } from '../../reservations/services/reservationService';
-
-function StatCard({ title, value, valueClassName = "" }) {
-  return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
-      <p className="text-sm font-medium text-gray-500">{title}</p>
-      <p className={`mt-2 text-3xl font-bold ${valueClassName}`}>{value}</p>
-    </div>
-  );
-}
 
 function ReservationsListPage() {
   const [reservations, setReservations] = useState([]);
@@ -65,6 +57,7 @@ function ReservationsListPage() {
     });
   }, [reservations, search, statusFilter]);
 
+  // Calculamos los números (Esto es compatible con el nuevo componente)
   const stats = useMemo(() => {
     const total = reservations.length;
     const confirmed = reservations.filter((r) => r.status === "Confirmada").length;
@@ -105,12 +98,22 @@ function ReservationsListPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 bg-gray-50 min-h-screen">
       
-      <div>
-        <h1 className="text-3xl font-bold text-gray-800">Gestión de Reservas</h1>
-        <p className="mt-2 text-gray-500">Administra todas las reservas del restaurante</p>
-      </div>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">
+              Gestión de Reservas
+            </h1>
+            <p className="text-gray-500">
+              Administra las reservas del restaurante
+            </p>
+          </div>
+
+        </div>
+
+      {/* 2. AQUI INSERTAMOS LAS TARJETAS (Arriba de la tabla queda mejor) */}
+      <ReservationStatsCards stats={stats} />
 
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
         
@@ -147,13 +150,6 @@ function ReservationsListPage() {
             onDelete={handleDelete}
           />
         )}
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard title="Total Reservas" value={stats.total} valueClassName="text-gray-800" />
-        <StatCard title="Confirmadas" value={stats.confirmed} valueClassName="text-green-600" />
-        <StatCard title="Pendientes" value={stats.pending} valueClassName="text-yellow-600" />
-        <StatCard title="Canceladas" value={stats.canceled} valueClassName="text-red-600" />
       </div>
 
       <Modal

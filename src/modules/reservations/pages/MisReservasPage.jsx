@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"; 
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../auth/hook/useAuth";
 import {
@@ -6,6 +6,8 @@ import {
   cancelUserReservation,
 } from "../services/reservationService";
 import bgImage from "../../../assets/facuimg/login-desk.png";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 const MisReservasPage = () => {
   const { user, isAuthenticated } = useAuth();
@@ -15,21 +17,18 @@ const MisReservasPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Si no está autenticado, redirigir
     if (isAuthenticated === false) {
       setLoading(false);
       navigate("/login");
       return;
     }
 
-    // 2. Si está autenticado pero aún no carga el usuario, esperamos
     if (isAuthenticated && !user) return;
 
     const fetchReservations = async () => {
       if (!user?.email) return;
 
       setLoading(true);
-      // Llamamos al servicio pasando el email
       const { data, error } = await getUserReservations(user.email);
 
       if (data) {
@@ -41,23 +40,52 @@ const MisReservasPage = () => {
     };
 
     fetchReservations();
-  }, [isAuthenticated, navigate, user]); // Se ejecuta cuando 'user' cambia
+  }, [isAuthenticated, navigate, user]);
 
-  const handleCancelReservation = async (reservationId) => {
-    if (!confirm("¿Estás seguro de cancelar esta reserva?")) return;
-
-    const { error } = await cancelUserReservation(reservationId);
-
-    if (error) {
-      alert(error.message);
-    } else {
-      // Filtro la lista localmente para que desaparezca sin recargar
-      setReservations((prev) =>
-        prev.map((res) =>
-          res.id === reservationId ? { ...res, status: "Cancelada" } : res
-        )
-      );
-    }
+  const handleCancelReservation = (reservationId) => {
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <div className="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full border border-gray-100 text-left font-sans">
+            <h1 className="text-xl font-bold text-gray-900 mb-2">
+              Cancelar Reserva
+            </h1>
+            <p className="text-gray-600 mb-6">
+              ¿Estás seguro de que deseas cancelar esta reserva?
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors"
+                onClick={onClose}
+              >
+                No, mantener
+              </button>
+              <button
+                className="px-5 py-2 text-white font-bold bg-red-600 hover:bg-red-700 rounded-lg shadow-md transition-colors"
+                onClick={async () => {
+                  // Lógica de cancelación
+                  const { error } = await cancelUserReservation(reservationId);
+                  if (error) {
+                    alert(error.message);
+                  } else {
+                    setReservations((prev) =>
+                      prev.map((res) =>
+                        res.id === reservationId
+                          ? { ...res, status: "Cancelada" }
+                          : res,
+                      ),
+                    );
+                  }
+                  onClose();
+                }}
+              >
+                Sí, Cancelar
+              </button>
+            </div>
+          </div>
+        );
+      },
+    });
   };
 
   const getStatusColor = (status) => {
@@ -148,14 +176,14 @@ const MisReservasPage = () => {
                               day: "numeric",
                               month: "long",
                               year: "numeric",
-                            }
+                            },
                           )
                         : "Fecha inválida"}
                     </p>
                   </div>
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-bold border ${getStatusColor(
-                      res.status
+                      res.status,
                     )}`}
                   >
                     {res.status}

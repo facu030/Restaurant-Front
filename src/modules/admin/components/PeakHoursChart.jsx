@@ -6,8 +6,8 @@ const PeakHoursChart = ({ data }) => {
       <h3 className="text-lg font-bold text-gray-800 mb-2">Horas Pico</h3>
       <p className="text-xs text-gray-400 mb-6">Promedio de ocupación por horario</p>
 
-      <div className="h-[250px] w-full">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="w-full">
+        <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data} barSize={30}>
             
             <XAxis 

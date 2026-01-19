@@ -146,3 +146,47 @@ input[type="number"]::-webkit-outer-spin-button {
 html {
   scroll-behavior: smooth;
 }
+
+.rdp {
+  --rdp-cell-size: 45px;       /* Tamaño de celda más grande */
+  --rdp-accent-color: #d97706; /* Amber-600 (Selección) */
+  --rdp-background-color: #b45309; /* Amber-700 (Hover) */
+  margin: 0;
+}
+
+/* Texto general (Días y Títulos) */
+.rdp-day, 
+.rdp-caption_label, 
+.rdp-head_cell {
+  color: #e2e8f0; /* Slate-200 */
+}
+
+/* Día Seleccionado */
+.rdp-day_selected:not([aria-disabled="true"]) { 
+  background-color: var(--rdp-accent-color); 
+  color: white;
+  font-weight: bold;
+  border: 2px solid #fbbf24; /* Borde Amber-400 */
+}
+
+/* Hover en días disponibles */
+.rdp-day:hover:not([aria-disabled="true"]):not(.rdp-day_selected) {
+  background-color: #334155; /* Slate-700 */
+  border-radius: 50%;
+}
+
+/* Día de Hoy */
+.rdp-day_today {
+  font-weight: bold;
+  color: #fbbf24; /* Amber-400 */
+}
+
+/* Botones de navegación (Flechas) */
+.rdp-button:hover:not([aria-disabled="true"]) {
+  background-color: #334155; /* Slate-700 */
+}
+
+/* Iconos de las flechas */
+.rdp-nav_icon {
+  fill: #e2e8f0; /* Slate-200 */
+}

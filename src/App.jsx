@@ -20,6 +20,8 @@ import ReservationsListPage from "./modules/admin/pages/ReservationsListPage";
 import EditReservationPage from "./modules/admin/pages/EditReservationPage";
 import DashboardPage from "./modules/admin/pages/DashboardPage";
 
+import UsersPage from "./modules/users/pages/UsersPage";
+
 // Error Components
 function NotFound() {
   return (
@@ -91,6 +93,10 @@ function App() {
         {
           path: "reservations/edit/:id",
           element: <EditReservationPage />,
+        },
+        {
+          path: "usuarios",
+          element: <UsersPage />,
         },
         // Redirección por defecto si entran a /admin sin nada más
         {

@@ -16,16 +16,18 @@ const Navbar = () => {
     setOpenMenu(false);
   };
 
-  const linkClass = ({ isActive }) =>
-    `px-3 py-2 rounded-md ${
-      isActive
-        ? "text-accent font-semibold"
-        : "text-gray-700 hover:text-gray-900"
-    }`;
+  const baseClasses = "px-3 py-2 rounded-md transition-colors duration-200 font-medium";
+  const inactiveColor = "text-gray-300 hover:text-white hover:bg-neutral-800";
+  const activeColor = "text-white bg-neutral-800";
+
+  const scrollLinkClass = `${baseClasses} ${inactiveColor}`;
+
+  const navLinkClass = ({ isActive }) =>
+    `${baseClasses} ${isActive ? activeColor : inactiveColor}`;
 
   const authButtonsDesktop = isAuthenticated ? (
     <Button
-      className="hidden sm:inline-flex px-4 py-1 rounded-full bg-neutral-800 text-white text-sm"
+      className="hidden sm:inline-flex px-4 py-1 rounded-full bg-neutral-200 text-neutral-900 text-sm font-semibold hover:bg-white"
       onClick={logout}
     >
       Cerrar sesión
@@ -33,13 +35,13 @@ const Navbar = () => {
   ) : (
     <div className="hidden sm:flex gap-2 items-center">
       <Button
-        className="px-4 py-1 rounded-full bg-accent-200 text-xs sm:text-sm"
+        className="px-4 py-1 rounded-full bg-accent-500 hover:bg-accent-400 text-white text-sm font-semibold"
         onClick={() => navigate("/login")}
       >
         Iniciar sesión
       </Button>
       <Button
-        className="px-4 py-1 rounded-full bg-neutral-200 text-xs sm:text-sm"
+        className="px-4 py-1 rounded-full bg-neutral-700 hover:bg-neutral-600 text-white text-sm"
         onClick={() => navigate("/register")}
       >
         Registrarse
@@ -49,7 +51,7 @@ const Navbar = () => {
 
   const authButtonsMobile = isAuthenticated ? (
     <Button
-      className="block w-full sm:hidden mt-4"
+      className="block w-full sm:hidden mt-4 bg-neutral-700 text-white"
       onClick={() => {
         logout();
       }}
@@ -59,7 +61,7 @@ const Navbar = () => {
   ) : (
     <div className="flex flex-col gap-2 mt-4 sm:hidden">
       <Button
-        className="w-full rounded-full bg-accent-200 text-sm"
+        className="w-full rounded-full bg-accent-500 text-white text-sm font-semibold"
         onClick={() => {
           navigate("/login");
           setOpenMenu(false);
@@ -68,7 +70,7 @@ const Navbar = () => {
         Iniciar sesión
       </Button>
       <Button
-        className="w-full rounded-full bg-neutral-200 text-sm"
+        className="w-full rounded-full bg-neutral-700 text-white text-sm"
         onClick={() => {
           navigate("/register");
           setOpenMenu(false);
@@ -80,47 +82,52 @@ const Navbar = () => {
   );
 
   return (
-    <header className="bg-white shadow">
+    <header className="bg-neutral-900 shadow-md sticky top-0 z-50 border-b border-neutral-800">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+          
           <div className="flex items-center ">
-            <NavLink to="/" className="text-2xl font-bold text-accent">
+            <NavLink to="/" className="text-2xl font-bold">
               <img
                 src={logodesk}
                 alt="Logo Restaurante"
-                className="h-30 w-auto object-contain"
+                className="h-16 w-auto object-contain"
               />
             </NavLink>
           </div>
+          
           <div className="flex items-center sm:hidden"></div>
 
           {/* Links desktop */}
-          <div className="hidden md:flex items-center space-x-6">
-            <a href="/#quienes-somos" className={linkClass}>
+          <div className="hidden md:flex items-center space-x-1 lg:space-x-4">
+            <a href="/#quienes-somos" className={scrollLinkClass}>
               Quiénes somos
             </a>
-            <a href="/#galeria" className={linkClass}>
-              Galería de imágenes
+            <a href="/#galeria" className={scrollLinkClass}>
+              Galería
             </a>
-            <a href="/#contacto" className={linkClass}>
+            <a href="/#contacto" className={scrollLinkClass}>
               Contacto
             </a>
+            
             {isAuthenticated && (
-              <NavLink to="/mis-reservas" className={linkClass}>
+              <NavLink to="/mis-reservas" className={navLinkClass}>
                 Mis Reservas
               </NavLink>
             )}
-            {authButtonsDesktop}
+            <div className="ml-4">
+                {authButtonsDesktop}
+            </div>
           </div>
 
           {/* Botón menú mobile */}
           <div className="sm:hidden flex items-center">
             <button
               onClick={() => setOpenMenu(!openMenu)}
-              className="p-2 rounded-md text-gray-700 hover:bg-gray-100"
+              className="p-2 rounded-md text-gray-300 hover:text-white hover:bg-neutral-800 focus:outline-none"
             >
               {openMenu ? (
-                <span className="text-xl">&times;</span>
+                <span className="text-2xl">&times;</span>
               ) : (
                 <svg
                   className="w-6 h-6"
@@ -144,29 +151,29 @@ const Navbar = () => {
 
       {/* Mobile menu panel */}
       <div
-        className={`sm:hidden bg-white border-t ${
+        className={`sm:hidden bg-neutral-900 border-t border-neutral-800 ${
           openMenu ? "block" : "hidden"
         }`}
       >
-        <div className="px-4 py-4">
+        <div className="px-4 py-4 pb-6">
           <nav className="flex flex-col gap-2">
             <a
               href="/#quienes-somos"
-              className={linkClass}
+              className={scrollLinkClass}
               onClick={() => setOpenMenu(false)}
             >
               Quiénes somos
             </a>
             <a
               href="/#galeria"
-              className={linkClass}
+              className={scrollLinkClass}
               onClick={() => setOpenMenu(false)}
             >
               Galería de imágenes
             </a>
             <a
               href="/#contacto"
-              className={linkClass}
+              className={scrollLinkClass}
               onClick={() => setOpenMenu(false)}
             >
               Contacto
@@ -175,7 +182,7 @@ const Navbar = () => {
             {isAuthenticated && (
               <NavLink
                 to="/mis-reservas"
-                className={linkClass}
+                className={navLinkClass}
                 onClick={() => setOpenMenu(false)}
               >
                 Mis Reservas
