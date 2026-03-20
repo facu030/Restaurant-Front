@@ -19,7 +19,7 @@ function formatTime(t) {
 }
 
 export default function CreateReservationPage() {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, username } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -61,11 +61,10 @@ export default function CreateReservationPage() {
   };
 
   useEffect(() => {
-    if (isAuthenticated && user) {
-      setValue("clientName", user.username || user.name || "");
-      setValue("email", user.email || "");
+    if (isAuthenticated && username) {
+      setValue("clientName", username || "");
     }
-  }, [isAuthenticated, user, setValue]);
+  }, [isAuthenticated, username, setValue]);
 
   useEffect(() => {
     const loadSlots = async () => {

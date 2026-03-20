@@ -1,14 +1,19 @@
-import { instance } from '../../shared/api/axiosInstance';
+import { instance } from '../../../shared/api/axiosInstance';
 
-export const getProducts = async (search = null, status = null, pageNumber = 1, pageSize = 20 ) => {
-  const queryString = new URLSearchParams({
-    search,
-    status,
-    pageNumber,
-    pageSize,
-  });
+export const getUsers = async () => {
+  try {
+    const { data } = await instance.get('/api/users');
+    return { data, error: null };
+  } catch (err) {
+    return { data: null, error: err.response?.data?.message || 'Error al cargar usuarios' };
+  }
+};
 
-  const response = await instance.get(`api/products/admin?${queryString}`);
-
-  return { data: response.data, error: null };
+export const getUserById = async (id) => {
+  try {
+    const { data } = await instance.get(`/api/users/${id}`);
+    return { data, error: null };
+  } catch (err) {
+    return { data: null, error: err.response?.data?.message || 'Usuario no encontrado' };
+  }
 };

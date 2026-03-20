@@ -3,8 +3,6 @@ import { useUsers } from "../hook/useUsers";
 import UsersTable from "../components/UsersTable";
 import UsersForm from "../components/UserForm";
 import Modal from "../../shared/components/Modal";
-
-// NUEVOS IMPORTS
 import UsersStats from "../components/UsersStats";
 import UsersFilter from "../components/UsersFilter";
 
@@ -61,11 +59,13 @@ const UsersPage = () => {
 
   const handleSaveUser = async (formData) => {
     setIsSaving(true);
+
     if (editingUser) {
       await updateUser(editingUser.id, formData);
     } else {
-      if (createUser) await createUser(formData);
+      await createUser(formData);
     }
+
     setIsSaving(false);
     handleCloseModal();
   };
@@ -122,7 +122,6 @@ const UsersPage = () => {
           )}
         </div>
       </div>
-
 
       <Modal
         isOpen={isModalOpen}

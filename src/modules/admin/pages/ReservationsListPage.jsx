@@ -57,7 +57,6 @@ function ReservationsListPage() {
     });
   }, [reservations, search, statusFilter]);
 
-  // Calculamos los números (Esto es compatible con el nuevo componente)
   const stats = useMemo(() => {
     const total = reservations.length;
     const confirmed = reservations.filter((r) => r.status === "Confirmada").length;
@@ -72,11 +71,13 @@ function ReservationsListPage() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("¿Seguro que querés eliminar esta reserva?")) return;
-
-    await deleteReservation(id);
-    setReservations((prev) => prev.filter((r) => r.id !== id));
-  };
+  const { error } = await deleteReservation(id);
+  if (error) {
+    alert('Error al eliminar: ' + error);
+    return;
+  }
+  setReservations((prev) => prev.filter((r) => r.id !== id));
+};
 
   const handleSaveEdit = async (formData) => {
     try {
@@ -112,7 +113,6 @@ function ReservationsListPage() {
 
         </div>
 
-      {/* 2. AQUI INSERTAMOS LAS TARJETAS (Arriba de la tabla queda mejor) */}
       <ReservationStatsCards stats={stats} />
 
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">

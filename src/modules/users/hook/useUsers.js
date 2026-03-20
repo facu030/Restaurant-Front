@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
-import { 
-  getAllUsers, 
-  deleteUser as deleteUserService, 
-  updateUser 
+import {
+  getAllUsers,
+  createUser as createUserService,
+  updateUser as updateUserService,
+  deleteUser as deleteUserService,
+  suspendUser,
+  activateUser,
 } from '../services/userService';
 
 export const useUsers = () => {
@@ -10,7 +13,6 @@ export const useUsers = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // 1. Cargar usuarios al inicio
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -18,44 +20,51 @@ export const useUsers = () => {
   const fetchUsers = async () => {
     setLoading(true);
     const { data, error } = await getAllUsers();
-    if (error) {
-      setError(error);
-    } else {
-      setUsers(data);
-    }
+    if (error) setError(error);
+    else setUsers(data);
     setLoading(false);
   };
 
-  // 2. Función para eliminar (Conecta con tu botón rojo)
   const handleDeleteUser = async (id) => {
-    // Llamamos al servicio
     const { error } = await deleteUserService(id);
-    
     if (error) {
-      alert("Error al eliminar: " + error);
-    } else {
-      // Actualizamos el estado local filtrando el usuario eliminado
-      // (Así la interfaz responde rápido sin recargar toda la lista)
-      setUsers(prevUsers => prevUsers.filter(user => user.id !== id));
+      alert('Error al eliminar: ' + error);
+      return;
     }
+    setUsers((prev) => prev.filter((u) => u.id !== id));
   };
 
-  // 3. Función para cambiar estado (Conecta con suspender/activar)
-  const handleStatusChange = async (id, nuevaAccion) => {
-    // Definimos el nuevo status string basado en la acción
-    const newStatus = nuevaAccion === 'Suspender' ? 'Suspendido' : 'Activo';
-    
-    // Llamamos al servicio para guardar en "BD"
-    const { error } = await updateUser(id, { status: newStatus });
+  // Suspender/Activar — llama al endpoint correcto según estado actual
+  const handleStatusChange = async (id, accion) => {
+    const { data, error } = accion === 'Suspender'
+      ? await suspendUser(id)
+      : await activateUser(id);
 
     if (error) {
-      alert("Error al actualizar: " + error);
-    } else {
-      // Actualizamos el estado local buscando el usuario y cambiándole el campo
-      setUsers(prevUsers => prevUsers.map(user => 
-        user.id === id ? { ...user, status: newStatus } : user
-      ));
+      alert('Error al actualizar estado: ' + error);
+      return;
     }
+
+    // Actualizamos el estado local con lo que devuelve el back
+    setUsers((prev) => prev.map((u) => (u.id === id ? data : u)));
+  };
+
+  const updateUser = async (id, formData) => {
+    const { data, error } = await updateUserService(id, formData);
+    if (error) {
+      alert('Error al actualizar: ' + error);
+      return;
+    }
+    setUsers((prev) => prev.map((u) => (u.id === id ? data : u)));
+  };
+
+  const createUser = async (formData) => {
+    const { data, error } = await createUserService(formData);
+    if (error) {
+      alert('Error al crear usuario: ' + error);
+      return;
+    }
+    setUsers((prev) => [...prev, data]);
   };
 
   return {
@@ -64,6 +73,8 @@ export const useUsers = () => {
     error,
     handleDeleteUser,
     handleStatusChange,
-    refreshUsers: fetchUsers
+    updateUser,
+    createUser,
+    refreshUsers: fetchUsers,
   };
 };

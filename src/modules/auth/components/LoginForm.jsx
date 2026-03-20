@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import Input from "../../shared/components/Input";
 import Button from "../../shared/components/Button";
 import useAuth from "../hook/useAuth";
-import { frontendErrorMessage } from "../helpers/backendError";
 import imgDesktop from "../../../assets/facuimg/login-desk.png";
 import logoMobile from "../../../assets/facuimg/mob.png";
 
@@ -17,30 +16,20 @@ function LoginForm() {
   } = useForm({ defaultValues: { username: "", password: "" } });
 
   
-
   const navigate = useNavigate();
 
-  const { singin } = useAuth();
+  const { signin } = useAuth();
 
-  const onValid = async (formData) => {
-    try {
-      const { error } = await singin(formData.username, formData.password);
+const onValid = async (formData) => {
+  const { error, role } = await signin(formData.username, formData.password);
 
-      if (error) {
-        setErrorMessage(error.frontendErrorMessage);
+  if (error) {
+    setErrorMessage(error); 
+    return;
+  }
 
-        return;
-      }
-
-      navigate("/admin/home");
-    } catch (error) {
-      if (error?.response?.data?.code) {
-        setErrorMessage(frontendErrorMessage[error?.response?.data?.code]);
-      } else {
-        setErrorMessage("Llame a soporte");
-      }
-    }
-  };
+  role === 'Admin' ? navigate('/admin/home') : navigate('/');
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-amber-950">

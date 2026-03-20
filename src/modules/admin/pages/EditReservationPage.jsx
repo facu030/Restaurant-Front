@@ -8,33 +8,32 @@ export default function EditReservationPage() {
   const navigate = useNavigate();
   
   const [initialValues, setInitialValues] = useState(null);
-  const [isSaving, setIsSaving] = useState(false); // 1. Nuevo estado para el loading del botón
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        const data = await getReservationById(id);
-        setInitialValues(data);
-      } catch (error) {
-        console.error("Error al cargar reserva:", error);
-        // Opcional: navigate('/admin/reservations') si falla
-      }
-    };
-    load();
-  }, [id]);
-
-  const onSubmit = async (values) => {
-    setIsSaving(true); // Bloqueamos el formulario
-    try {
-      await updateReservation(Number(id), values);
-      navigate("/admin/reservations"); // 2. Ojo: asegúrate que esta ruta coincida con tu Router
-    } catch (error) {
-      console.error("Error al actualizar:", error);
-      alert("Hubo un error al guardar los cambios.");
-    } finally {
-      setIsSaving(false); // Desbloqueamos (aunque si navega, esto se desmonta)
+  const load = async () => {
+    const { data, error } = await getReservationById(id); 
+    if (data) {
+      setInitialValues(data);
+    } else {
+      console.error('Error al cargar reserva:', error);
+      navigate('/admin/reservations');
     }
   };
+  load();
+}, [id]);
+
+const onSubmit = async (values) => {
+  setIsSaving(true);
+  const { error } = await updateReservation(Number(id), values); 
+  setIsSaving(false);
+
+  if (error) {
+    alert('Hubo un error al guardar los cambios: ' + error);
+    return;
+  }
+  navigate('/admin/reservations');
+};
 
   const handleCancel = () => {
     navigate("/admin/reservations");
@@ -51,9 +50,9 @@ export default function EditReservationPage() {
         <ReservationForm 
           initialData={initialValues} 
           onSubmit={onSubmit}
-          onCancel={handleCancel} // 3. Agregamos la función cancelar para el botón gris
-          isAdmin={true}          // 4. Importante: Para que aparezca el select de "Estado"
-          isLoading={isSaving}    // 5. Para deshabilitar inputs mientras guarda
+          onCancel={handleCancel} 
+          isAdmin={true}          
+          isLoading={isSaving}    
         />
       </div>
     </div>

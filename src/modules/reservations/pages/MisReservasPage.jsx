@@ -2,45 +2,35 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../auth/hook/useAuth";
 import {
-  getUserReservations,
-  cancelUserReservation,
+  getMyReservations,
+  cancelMyReservation,
 } from "../services/reservationService";
 import bgImage from "../../../assets/facuimg/login-desk.png";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 
 const MisReservasPage = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (isAuthenticated === false) {
-      setLoading(false);
+    if (!isAuthenticated) {
       navigate("/login");
       return;
     }
 
-    if (isAuthenticated && !user) return;
-
     const fetchReservations = async () => {
-      if (!user?.email) return;
-
       setLoading(true);
-      const { data, error } = await getUserReservations(user.email);
-
-      if (data) {
-        setReservations(data);
-      } else {
-        console.error(error);
-      }
+      const { data, error } = await getMyReservations();
+      if (data) setReservations(data);
+      else console.error(error);
       setLoading(false);
     };
 
     fetchReservations();
-  }, [isAuthenticated, navigate, user]);
+  }, [isAuthenticated, navigate]);
 
   const handleCancelReservation = (reservationId) => {
     confirmAlert({
@@ -64,7 +54,7 @@ const MisReservasPage = () => {
                 className="px-5 py-2 text-white font-bold bg-red-600 hover:bg-red-700 rounded-lg shadow-md transition-colors"
                 onClick={async () => {
                   // Lógica de cancelación
-                  const { error } = await cancelUserReservation(reservationId);
+                  const { error } = await cancelMyReservation(reservationId);
                   if (error) {
                     alert(error.message);
                   } else {
