@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom"; 
 import Input from "../../shared/components/Input";
 import Button from "../../shared/components/Button";
 import useAuth from "../hook/useAuth";
-import { frontendErrorMessage } from "../helpers/backendError";
 
 function RegisterForm({ onSuccess }) {
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+  const { signup } = useAuth();
 
   const {
     register,
@@ -23,36 +25,23 @@ function RegisterForm({ onSuccess }) {
   });
 
   const password = watch("password");
-  const { signup } = useAuth();
 
   const onValid = async (formData) => {
-    setErrorMessage("");
+    const { error, role } = await signup(
+      formData.username,
+      formData.email,
+      formData.password
+    );
 
-    if (formData.password !== formData.confirmPassword) {
-      setErrorMessage("Las contraseñas no coinciden");
+    if (error) {
+      setErrorMessage(error);
       return;
     }
 
-    try {
-      const { error } = await signup(
-        formData.username,
-        formData.email,
-        formData.password
-      );
-
-      if (error) {
-        setErrorMessage(error.frontendErrorMessage);
-        return;
-      }
-
-      if (onSuccess) onSuccess();
-    } catch (err) {
-      const code = err?.response?.data?.code;
-      if (code && frontendErrorMessage[code]) {
-        setErrorMessage(frontendErrorMessage[code]);
-      } else {
-        setErrorMessage("No se pudo registrar el usuario");
-      }
+    if (onSuccess) {
+      onSuccess();
+    } else {
+      role === 'Admin' ? navigate('/admin/home') : navigate('/');
     }
   };
 

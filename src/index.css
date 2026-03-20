@@ -1,61 +1,55 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
+/* ============================================================
+   VARIABLES
+   ============================================================ */
 :root {
-  /* Colores - versión clara (por defecto) */
-  --accent: #c47a00; /* color principal dorado */
-  --accent-200: #fde68a; /* claro */
-  --accent-300: #fdba74; /* medio */
-  --accent-600: #b45309; /* oscuro */
-  --accent-700: #7f4700; /* más oscuro */
+  --accent:     #c47a00;
+  --accent-200: #fde68a;
+  --accent-300: #fdba74;
+  --accent-600: #b45309;
+  --accent-700: #7f4700;
 
-  --bg: #f3f4f6; /* gray-100 */
-  --card: #ffffff;
+  --bg:      #f3f4f6;
+  --card:    #ffffff;
   --surface: #ffffff;
-  --text: #0f172a; /* gray-900 */
-  --muted: #6b7280; /* gray-500 */
-  --border: #e5e7eb; /* gray-200 */
+  --text:    #0f172a;
+  --muted:   #6b7280;
+  --border:  #e5e7eb;
 
-  /* Tamaños y radios reutilizables */
   --radius-lg: 0.75rem;
+
+  /* React Day Picker */
+  --rdp-cell-size:       45px;
+  --rdp-accent-color:    #d97706;
+  --rdp-background-color:#b45309;
 }
 
 .dark {
-  /* Variables para modo oscuro */
-  --accent: #f59e0b; /* naranja/dorado más vivo en dark */
+  --accent:     #f59e0b;
   --accent-200: #f7c948;
   --accent-300: #fb923c;
   --accent-600: #ea580c;
   --accent-700: #7f4700;
 
-  --bg: #071627; /* fondo principal dark */
-  --card: #071827; /* tarjetas */
+  --bg:      #071627;
+  --card:    #071827;
   --surface: #06121a;
-  --text: #e6eef8; /* texto claro */
-  --muted: #94a3b8;
-  --border: rgba(255,255,255,0.04);
+  --text:    #e6eef8;
+  --muted:   #94a3b8;
+  --border:  rgba(255, 255, 255, 0.04);
 }
 
-/* Utilidades de colores concretos para compatibilidad con el proyecto */
-.text-accent { color: var(--accent) !important; }
-.bg-accent-200 { background-color: var(--accent-200) !important; }
-.bg-accent-300 { background-color: var(--accent-300) !important; }
-.bg-accent-600 { background-color: var(--accent-600) !important; color: #fff !important; }
-.hover\:bg-accent-700:hover { background-color: var(--accent-700) !important; }
-.border-accent-500 { border-color: var(--accent-600) !important; }
-.focus\:ring-accent:focus { box-shadow: 0 0 0 3px rgba(196,122,0,0.15) !important; }
-
-/* Evitar 'flash' de estilos: aplicar fondo y fuente en el nivel más alto */
-html {
-  background-color: var(--bg);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
+/* ============================================================
+   BASE
+   ============================================================ */
 @layer base {
-  /* Tipografías base */
-  :root {
-    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  html {
+    background-color: var(--bg);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
@@ -63,14 +57,11 @@ html {
     font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
     background-color: var(--bg);
     color: var(--text);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     transition: background-color 160ms ease, color 160ms ease;
   }
 
   #root { @apply h-[100dvh]; }
 
-  /* Encabezados con Playfair Display */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
     color: var(--text);
@@ -78,115 +69,97 @@ html {
     line-height: 1.1;
   }
 
-  /* Enlaces y elementos básicos */
   a { color: inherit; text-decoration: none; }
-  button, input, textarea, select { font-family: inherit; color: inherit; }
 
-  /* Inputs, selects y textareas: base limpia */
-  input, textarea, select, button {
-    background-color: transparent;
+  button, input, textarea, select {
+    font-family: inherit;
     color: inherit;
+    background-color: transparent;
     border-radius: 0.5rem;
     transition: box-shadow 150ms ease, border-color 150ms ease, background-color 150ms ease;
   }
 
-  /* Smooth scroll behavior */
-  html { scroll-behavior: smooth; }
+  /* Inputs numéricos y de fecha */
+  input[type="date"],
+  input[type="number"] {
+    color-scheme: dark;
+    background-color: transparent;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.85;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    filter: invert(1);
+    opacity: 0.85;
+  }
+
+  ::placeholder { color: rgba(107, 114, 128, 0.7); }
 }
 
-/* Dark-mode utility overrides que corrigen conflictos de especificidad */
-.dark .text-gray-50 { color: #f8fafc !important; }
-.dark .text-gray-100 { color: #f1f5f9 !important; }
-.dark .text-gray-200 { color: #e6eef8 !important; }
-.dark .text-gray-300 { color: #cbd5e1 !important; }
-.dark .text-gray-400 { color: #9aa4b2 !important; }
-.dark .text-gray-500 { color: #94a3b8 !important; }
-.dark .text-gray-600 { color: #7b8794 !important; }
-.dark .text-gray-700 { color: #5b6880 !important; }
+/* ============================================================
+   UTILIDADES DE ACCENT (CSS vars → clases Tailwind-like)
+   ============================================================ */
+.text-accent                { color: var(--accent) !important; }
+.bg-accent-200              { background-color: var(--accent-200) !important; }
+.bg-accent-300              { background-color: var(--accent-300) !important; }
+.bg-accent-600              { background-color: var(--accent-600) !important; color: #fff !important; }
+.hover\:bg-accent-700:hover { background-color: var(--accent-700) !important; }
+.border-accent-500          { border-color: var(--accent-600) !important; }
+.focus\:ring-accent:focus   { box-shadow: 0 0 0 3px rgba(196, 122, 0, 0.15) !important; }
 
-.dark .border-gray-200 { border-color: rgba(255,255,255,0.04) !important; }
-.dark .bg-white { background-color: var(--card) !important; color: var(--text) !important; }
-.dark .bg-gray-50 { background-color: #071627 !important; }
-.dark .bg-gray-100 { background-color: #071c2a !important; }
-.dark table, .dark th, .dark td { color: var(--text) !important; }
-.dark .rounded-xl.border { border-color: rgba(255,255,255,0.04) !important; }
-.dark .hover\:bg-gray-50:hover { background-color: rgba(255,255,255,0.03) !important; }
+/* ============================================================
+   DARK MODE OVERRIDES
+   ============================================================ */
+.dark ::placeholder              { color: rgba(230, 238, 248, 0.45) !important; }
+.dark .text-gray-50              { color: #f8fafc !important; }
+.dark .text-gray-100             { color: #f1f5f9 !important; }
+.dark .text-gray-200             { color: #e6eef8 !important; }
+.dark .text-gray-300             { color: #cbd5e1 !important; }
+.dark .text-gray-400             { color: #9aa4b2 !important; }
+.dark .text-gray-500             { color: #94a3b8 !important; }
+.dark .text-gray-600             { color: #7b8794 !important; }
+.dark .text-gray-700             { color: #5b6880 !important; }
+.dark .border-gray-200           { border-color: rgba(255, 255, 255, 0.04) !important; }
+.dark .rounded-xl.border         { border-color: rgba(255, 255, 255, 0.04) !important; }
+.dark .bg-white                  { background-color: var(--card) !important; color: var(--text) !important; }
+.dark .bg-gray-50                { background-color: #071627 !important; }
+.dark .bg-gray-100               { background-color: #071c2a !important; }
+.dark .hover\:bg-gray-50:hover   { background-color: rgba(255, 255, 255, 0.03) !important; }
+.dark table, .dark th, .dark td  { color: var(--text) !important; }
 
-/* Inputs tipo date / number: compatibilidad y visual en Chrome/Edge */
-input[type="date"],
-input[type="number"] {
-  color-scheme: dark;
-  background-color: transparent;
-}
+/* ============================================================
+   REACT DAY PICKER (CalendarSelector)
+   ============================================================ */
+.rdp { margin: 0; }
 
-/* Icono del calendario (Chrome/Edge) */
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  opacity: 0.85;
-}
-
-/* Flechitas del number (Chrome/Edge) */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  filter: invert(1);
-  opacity: 0.85;
-}
-
-/* Mejorar contraste de placeholders en dark */
-::placeholder { color: rgba(107,114,128,0.7); }
-.dark ::placeholder { color: rgba(230,238,248,0.45) !important; }
-
-/* Pequeñas utilidades locales que el proyecto usa */
-.rounded-4xl { border-radius: 2rem; }
-.shadow-sm { box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
-
-/* Asegurar que los componentes que dependían de clases duplicadas mantengan prioridad */
-.force-card { background-color: var(--card) !important; color: var(--text) !important; }
-
-html {
-  scroll-behavior: smooth;
-}
-
-.rdp {
-  --rdp-cell-size: 45px;       /* Tamaño de celda más grande */
-  --rdp-accent-color: #d97706; /* Amber-600 (Selección) */
-  --rdp-background-color: #b45309; /* Amber-700 (Hover) */
-  margin: 0;
-}
-
-/* Texto general (Días y Títulos) */
-.rdp-day, 
-.rdp-caption_label, 
+.rdp-day,
+.rdp-caption_label,
 .rdp-head_cell {
-  color: #e2e8f0; /* Slate-200 */
+  color: #e2e8f0;
 }
 
-/* Día Seleccionado */
-.rdp-day_selected:not([aria-disabled="true"]) { 
-  background-color: var(--rdp-accent-color); 
+.rdp-day_selected:not([aria-disabled="true"]) {
+  background-color: var(--rdp-accent-color);
   color: white;
   font-weight: bold;
-  border: 2px solid #fbbf24; /* Borde Amber-400 */
+  border: 2px solid #fbbf24;
 }
 
-/* Hover en días disponibles */
 .rdp-day:hover:not([aria-disabled="true"]):not(.rdp-day_selected) {
-  background-color: #334155; /* Slate-700 */
+  background-color: #334155;
   border-radius: 50%;
 }
 
-/* Día de Hoy */
-.rdp-day_today {
-  font-weight: bold;
-  color: #fbbf24; /* Amber-400 */
-}
+.rdp-day_today         { font-weight: bold; color: #fbbf24; }
+.rdp-nav_icon          { fill: #e2e8f0; }
+.rdp-button:hover:not([aria-disabled="true"]) { background-color: #334155; }
 
-/* Botones de navegación (Flechas) */
-.rdp-button:hover:not([aria-disabled="true"]) {
-  background-color: #334155; /* Slate-700 */
-}
-
-/* Iconos de las flechas */
-.rdp-nav_icon {
-  fill: #e2e8f0; /* Slate-200 */
-}
+/* ============================================================
+   MISC
+   ============================================================ */
+.rounded-4xl { border-radius: 2rem; }
+.force-card  { background-color: var(--card) !important; color: var(--text) !important; }

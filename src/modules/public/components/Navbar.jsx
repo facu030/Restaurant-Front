@@ -8,15 +8,15 @@ const Navbar = () => {
   const [openMenu, setOpenMenu] = useState(false);
 
   const navigate = useNavigate();
-  const { isAuthenticated, singout } = useAuth();
+  const { isAuthenticated, signout, username } = useAuth();
 
   const logout = () => {
-    if (typeof singout === "function") singout();
-    navigate("/");
+    signout();
     setOpenMenu(false);
   };
 
-  const baseClasses = "px-3 py-2 rounded-md transition-colors duration-200 font-medium";
+  const baseClasses =
+    "px-3 py-2 rounded-md transition-colors duration-200 font-medium";
   const inactiveColor = "text-gray-300 hover:text-white hover:bg-neutral-800";
   const activeColor = "text-white bg-neutral-800";
 
@@ -26,12 +26,15 @@ const Navbar = () => {
     `${baseClasses} ${isActive ? activeColor : inactiveColor}`;
 
   const authButtonsDesktop = isAuthenticated ? (
-    <Button
-      className="hidden sm:inline-flex px-4 py-1 rounded-full bg-neutral-200 text-neutral-900 text-sm font-semibold hover:bg-white"
-      onClick={logout}
-    >
-      Cerrar sesión
-    </Button>
+    <div className="hidden sm:flex gap-3 items-center">
+      <span className="text-gray-300 text-sm">Hola, {username}</span>
+      <Button
+        className="px-4 py-1 rounded-full bg-neutral-200 text-neutral-900 text-sm font-semibold hover:bg-white"
+        onClick={logout}
+      >
+        Cerrar sesión
+      </Button>
+    </div>
   ) : (
     <div className="hidden sm:flex gap-2 items-center">
       <Button
@@ -85,7 +88,6 @@ const Navbar = () => {
     <header className="bg-neutral-900 shadow-md sticky top-0 z-50 border-b border-neutral-800">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          
           <div className="flex items-center ">
             <NavLink to="/" className="text-2xl font-bold">
               <img
@@ -95,7 +97,7 @@ const Navbar = () => {
               />
             </NavLink>
           </div>
-          
+
           <div className="flex items-center sm:hidden"></div>
 
           {/* Links desktop */}
@@ -109,15 +111,13 @@ const Navbar = () => {
             <a href="/#contacto" className={scrollLinkClass}>
               Contacto
             </a>
-            
+
             {isAuthenticated && (
               <NavLink to="/mis-reservas" className={navLinkClass}>
                 Mis Reservas
               </NavLink>
             )}
-            <div className="ml-4">
-                {authButtonsDesktop}
-            </div>
+            <div className="ml-4">{authButtonsDesktop}</div>
           </div>
 
           {/* Botón menú mobile */}

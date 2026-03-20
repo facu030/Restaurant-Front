@@ -1,10 +1,7 @@
-import React from 'react';
 import { confirmAlert } from 'react-confirm-alert'; 
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
-// --- 1. DEFINICIÓN DE ÍCONOS (Solución para Vite) ---
-// Al definirlos así, heredan el color del texto (currentColor), 
-// permitiendo que tus clases 'hover:text-blue-600' funcionen.
+// --- 1. DEFINICIÓN DE ÍCONOS ---
 
 const EditIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">

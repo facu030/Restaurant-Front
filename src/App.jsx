@@ -98,7 +98,7 @@ function App() {
           path: "usuarios",
           element: <UsersPage />,
         },
-        // Redirección por defecto si entran a /admin sin nada más
+        // Redirección por defecto si entran a /admin
         {
           index: true,
           element: <DashboardPage />,

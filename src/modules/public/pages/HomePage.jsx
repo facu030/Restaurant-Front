@@ -12,7 +12,6 @@ const HomePage = () => {
   // Este efecto se ejecuta cada vez que cambia el "hash" de la URL
   useEffect(() => {
     if (hash) {
-      // Buscamos el elemento por su id (ej: #contacto)
       const element = document.querySelector(hash);
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });

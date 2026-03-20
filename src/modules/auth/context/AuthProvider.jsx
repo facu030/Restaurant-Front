@@ -1,66 +1,71 @@
-import { createContext, useState } from 'react';
-import { login } from '../services/login';
+import { createContext, useState, useCallback } from 'react';
+import authService from '../services/authService';
+import { getErrorMessage } from '../helpers/backendError';
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
+
+const getInitialAuthState = () => ({
+  token: localStorage.getItem('token') || null,
+  role: localStorage.getItem('role') || null,
+  username: localStorage.getItem('username') || null,
+});
 
 function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    const token = localStorage.getItem('token');
-    return Boolean(token);
-  });
+  const [authState, setAuthState] = useState(getInitialAuthState);
 
-  const [role, setRole] = useState(() => {
-    return localStorage.getItem('role') ?? null;
-  });
+  // Guarda en localStorage Y en el estado de React 
+  const persistAuth = useCallback(({ token, user }) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('role', user.role);
+    localStorage.setItem('username', user.userName);
 
-  const [username, setUsername] = useState(() => {
-    return localStorage.getItem('username') ?? null;
-  });
+    setAuthState({
+      token,
+      role: user.role,
+      username: user.userName,
+    });
+  }, []);
 
-  const singout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('role');
-    localStorage.removeItem('username');
-    //temporal hasta implementar refresh token
-    setIsAuthenticated(false);
-    setRole(null);
-    setUsername(null);
-  };
+  const signin = useCallback(async (username, password) => {
+  try {
+    const data = await authService.login(username, password);
+    persistAuth(data);
+    return { error: null, role: data.user.role };
+  } catch (err) {
+    return { error: getErrorMessage(err), role: null }; 
+  }
+}, [persistAuth]);
 
-  const singin = async (usernameInput, password) => {
-    const { data, error } = await login(usernameInput, password);
+  const signup = useCallback(async (username, email, password) => {
+  try {
+    const data = await authService.register(username, email, password);
+    persistAuth(data);
+    return { error: null, role: data.user.role };
+  } catch (err) {
+    return { error: getErrorMessage(err), role: null }; 
+  }
+}, [persistAuth]);
 
-    if (error) {
-      return { error };
-    }
+  const signout = useCallback((redirectTo = '/') => {
+    localStorage.clear();
+    setAuthState({ token: null, role: null, username: null });
+    window.location.href = redirectTo;
+  }, []);
 
-    // data: { token, role, username }
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('role', data.role);
-    localStorage.setItem('username', data.username);
-    setIsAuthenticated(true);
-    setRole(data.role);
-    setUsername(data.username);
-
-    return { error: null };
+  const value = {
+    isAuthenticated: Boolean(authState.token),
+    role: authState.role,
+    username: authState.username,
+    signin,
+    signup,
+    signout,
   };
 
   return (
-    <AuthContext.Provider
-      value={ {
-        isAuthenticated,
-        singin,
-        singout,
-        role,
-        username,
-      } }
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-export {
-  AuthProvider,
-  AuthContext,
-};
+export { AuthProvider, AuthContext };
