@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import ReservationListTable from '../../reservations/components/ReservationListTable';
-import ReservationForm from '../../reservations/components/ReservationForm';
-import Modal from '../../shared/components/Modal';
-import ReservationStatsCards from '../../reservations/components/ReservationStatsCards';
+import ReservationListTable from "../../reservations/components/ReservationListTable";
+import ReservationForm from "../../reservations/components/ReservationForm";
+import Modal from "../../shared/components/Modal";
+import ReservationStatsCards from "../../reservations/components/ReservationStatsCards";
 
 import {
   getReservations,
   updateReservation,
   deleteReservation,
-} from '../../reservations/services/reservationService';
+} from "../../reservations/services/reservationService";
 
 function ReservationsListPage() {
   const [reservations, setReservations] = useState([]);
@@ -25,12 +25,12 @@ function ReservationsListPage() {
     const load = async () => {
       setLoading(true);
       const { data, error } = await getReservations();
-      
+
       if (data) {
-        setReservations(data); 
+        setReservations(data);
       } else {
         console.error("Error cargando reservas:", error);
-        setReservations([]); 
+        setReservations([]);
       }
       setLoading(false);
     };
@@ -43,7 +43,7 @@ function ReservationsListPage() {
     return reservations.filter((r) => {
       const client = (r.clientName ?? r.client ?? "").toLowerCase();
       const email = (r.email ?? "").toLowerCase();
-      const id = String(r.id ?? "");
+      const id = String(r._id ?? r.id ?? "");
 
       const matchSearch =
         !s || client.includes(s) || email.includes(s) || id.includes(s);
@@ -59,64 +59,87 @@ function ReservationsListPage() {
 
   const stats = useMemo(() => {
     const total = reservations.length;
-    const confirmed = reservations.filter((r) => r.status === "Confirmada").length;
-    const pending = reservations.filter((r) => r.status === "Pendiente").length;
-    const canceled = reservations.filter((r) => r.status === "Cancelada").length;
+    const confirmed = reservations.filter(
+      (r) => r.status === "Confirmada",
+    ).length;
+    const pending = reservations.filter(
+      (r) => r.status === "Pendiente" || !r.status,
+    ).length; // Agregado fallback a Pendiente
+    const canceled = reservations.filter(
+      (r) => r.status === "Cancelada",
+    ).length;
     return { total, confirmed, pending, canceled };
   }, [reservations]);
 
-  const handleEdit = (reservation) => {
-    setEditing(reservation); 
-    setOpenEdit(true);
+  const handleEdit = (id) => {
+    const reservaParaEditar = reservations.find(
+      (r) => r._id === id || r.id === id,
+    );
+    if (reservaParaEditar) {
+      setEditing(reservaParaEditar);
+      setOpenEdit(true);
+    }
   };
 
   const handleDelete = async (id) => {
-  const { error } = await deleteReservation(id);
-  if (error) {
-    alert('Error al eliminar: ' + error);
-    return;
-  }
-  setReservations((prev) => prev.filter((r) => r.id !== id));
-};
+    const { error } = await deleteReservation(id);
+    if (error) {
+      alert("Error al eliminar: " + error);
+      return;
+    }
+    setReservations((prev) => prev.filter((r) => r._id !== id && r.id !== id));
+  };
 
   const handleSaveEdit = async (formData) => {
     try {
       setSaving(true);
-      const { data: updated, error } = await updateReservation(editing.id, formData);
+      const idToUpdate = editing._id || editing.id;
+      const { data: updated, error } = await updateReservation(
+        idToUpdate,
+        formData,
+      );
 
       if (updated && !error) {
         setReservations((prev) =>
-          prev.map((r) => (r.id === updated.id ? updated : r))
+          prev.map((r) =>
+            (r._id || r.id) === (updated._id || updated.id) ? updated : r,
+          ),
         );
         setOpenEdit(false);
         setEditing(null);
       } else {
-        alert("Error al guardar: " + (error?.message || "Error desconocido"));
+        alert(
+          "Error al guardar: " +
+            (error?.message || error || "Error desconocido"),
+        );
       }
     } finally {
       setSaving(false);
     }
   };
 
+  const getDisplayId = (reserva) => {
+    if (!reserva) return "";
+    const id = reserva._id || reserva.id;
+    return id ? String(id).substring(0, 6) : "";
+  };
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-800">
-              Gestión de Reservas
-            </h1>
-            <p className="text-gray-500">
-              Administra las reservas del restaurante
-            </p>
-          </div>
-
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800">
+            Gestión de Reservas
+          </h1>
+          <p className="text-gray-500">
+            Administra las reservas del restaurante
+          </p>
         </div>
+      </div>
 
       <ReservationStatsCards stats={stats} />
 
       <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-800">Lista de Reservas</h2>
 
@@ -142,7 +165,9 @@ function ReservationsListPage() {
         </div>
 
         {loading ? (
-          <div className="text-center py-10 text-gray-500 animate-pulse">Cargando reservas...</div>
+          <div className="text-center py-10 text-gray-500 animate-pulse">
+            Cargando reservas...
+          </div>
         ) : (
           <ReservationListTable
             reservations={filtered}
@@ -153,8 +178,12 @@ function ReservationsListPage() {
       </div>
 
       <Modal
-        isOpen={openEdit} 
-        title={editing ? `Editar Reserva #${editing.id}` : "Editar Reserva"}
+        isOpen={openEdit}
+        title={
+          editing
+            ? `Editar Reserva #${getDisplayId(editing)}`
+            : "Editar Reserva"
+        }
         onClose={() => {
           if (saving) return;
           setOpenEdit(false);

@@ -53,14 +53,13 @@ const MisReservasPage = () => {
               <button
                 className="px-5 py-2 text-white font-bold bg-red-600 hover:bg-red-700 rounded-lg shadow-md transition-colors"
                 onClick={async () => {
-                  // Lógica de cancelación
                   const { error } = await cancelMyReservation(reservationId);
                   if (error) {
-                    alert(error.message);
+                    alert(error.message || "Error al cancelar la reserva");
                   } else {
                     setReservations((prev) =>
                       prev.map((res) =>
-                        res.id === reservationId
+                        (res._id || res.id) === reservationId
                           ? { ...res, status: "Cancelada" }
                           : res,
                       ),
@@ -143,7 +142,7 @@ const MisReservasPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {reservations.map((res) => (
               <div
-                key={res.id}
+                key={res._id || res.id}
                 className="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow relative overflow-hidden group"
               >
                 <div
@@ -159,15 +158,13 @@ const MisReservasPage = () => {
                     </p>
                     <p className="text-xl text-white font-semibold capitalize">
                       {res.date
-                        ? new Date(res.date + "T12:00:00").toLocaleDateString(
-                            "es-AR",
-                            {
-                              weekday: "long",
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            },
-                          )
+                        ? new Date(res.date).toLocaleDateString("es-AR", {
+                            timeZone: "UTC",
+                            weekday: "long",
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })
                         : "Fecha inválida"}
                     </p>
                   </div>
@@ -176,7 +173,7 @@ const MisReservasPage = () => {
                       res.status,
                     )}`}
                   >
-                    {res.status}
+                    {res.status || "Pendiente"}
                   </span>
                 </div>
 
@@ -194,7 +191,7 @@ const MisReservasPage = () => {
                 {res.status !== "Cancelada" && (
                   <div className="pl-3 mt-4 border-t border-slate-700 pt-4 flex justify-end">
                     <button
-                      onClick={() => handleCancelReservation(res.id)}
+                      onClick={() => handleCancelReservation(res._id || res.id)}
                       className="text-sm text-red-400 hover:text-red-300 hover:underline transition-colors"
                     >
                       Cancelar reserva

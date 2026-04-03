@@ -15,8 +15,13 @@ function badgeClasses(status) {
 }
 
 function formatDate(iso) {
-  const [y, m, d] = iso.split("-");
-  return `${d}/${m}/${y}`;
+  if (!iso) return "-";
+  return new Date(iso).toLocaleDateString("es-AR", {
+    timeZone: "UTC",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
 }
 
 export default function ReservationListTable({
@@ -60,16 +65,6 @@ export default function ReservationListTable({
     });
   };
 
-  const handleDeleteClick = (id) => {
-    showConfirm({
-      title: "Eliminar Reserva",
-      message: `¿Estás seguro de que deseas eliminar permanentemente la reserva #${id}? Esta acción no se puede deshacer.`,
-      confirmText: "Sí, Eliminar",
-      confirmColor: "bg-red-600 hover:bg-red-700",
-      onConfirm: () => onDelete(id),
-    });
-  };
-
   return (
     <div className="mt-4 overflow-x-auto">
       <table className="w-full text-left border-collapse min-w-[800px]">
@@ -89,7 +84,7 @@ export default function ReservationListTable({
         <tbody>
           {reservations.map((r) => (
             <tr
-              key={r.id}
+              key={r.id || r._id}
               className="border-b bg-white hover:bg-gray-50 transition-colors"
             >
               <td className="px-3 py-3 font-medium">#{r.id ?? "-"}</td>
@@ -112,7 +107,7 @@ export default function ReservationListTable({
                 <div className="flex justify-end gap-2">
                   <button
                     className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                    onClick={() => onEdit(r.id)}
+                    onClick={() => onEdit(r._id || r.id)}
                     title="Editar"
                   >
                     <svg
@@ -133,7 +128,7 @@ export default function ReservationListTable({
 
                   <button
                     className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                    onClick={() => handleDeleteClick(r.id)}
+                    onClick={() => onDelete(r._id || r.id)}
                     title="Eliminar"
                   >
                     <svg

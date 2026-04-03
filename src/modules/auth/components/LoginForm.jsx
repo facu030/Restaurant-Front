@@ -15,21 +15,19 @@ function LoginForm() {
     formState: { errors },
   } = useForm({ defaultValues: { username: "", password: "" } });
 
-  
   const navigate = useNavigate();
-
   const { signin } = useAuth();
 
-const onValid = async (formData) => {
-  const { error, role } = await signin(formData.username, formData.password);
+  const onValid = async (formData) => {
+    const { error, role } = await signin(formData.username, formData.password);
 
-  if (error) {
-    setErrorMessage(error); 
-    return;
-  }
+    if (error) {
+      setErrorMessage(error);
+      return;
+    }
 
-  role === 'Admin' ? navigate('/admin/home') : navigate('/');
-};
+    role === "Admin" ? navigate("/admin/home") : navigate("/");
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-amber-950">
@@ -38,9 +36,9 @@ const onValid = async (formData) => {
           <div className="relative px-6 py-10 md:pb-35 md:p-5 flex items-center bg-white text-black">
             <button
               type="button"
-              onClick={() => navigate('/')}
-              aria-label='Cerrar'
-              className='absolute right-4 top-4 md:hidden text-white bg-transparent p-2 rounded-full hover:bg-gray-100'
+              onClick={() => navigate("/")}
+              aria-label="Cerrar"
+              className="absolute right-4 top-4 md:hidden text-white bg-transparent p-2 rounded-full hover:bg-gray-100"
             >
               X
             </button>
@@ -60,12 +58,12 @@ const onValid = async (formData) => {
                 className="flex flex-col gap-4"
               >
                 <Input
-                  label="Usuario"
+                  label="Usuario o Email"
                   {...register("username", {
-                    required: "Usuario es obligatorio",
-                    pattern: {
-                      value: /^[A-Za-zÁÉÍÓÚáéíóúÑñ]+$/,
-                      message: "El usuario solo puede contener letras",
+                    required: "Este campo es obligatorio",
+                    minLength: {
+                      value: 3,
+                      message: "Debe tener al menos 3 caracteres",
                     },
                   })}
                   error={errors.username?.message}
@@ -86,10 +84,10 @@ const onValid = async (formData) => {
                   Iniciar Sesión
                 </Button>
                 <Button
-                className="text-lg"
+                  className="text-lg"
                   type="button"
                   variant="secondary"
-                  onClick={() => navigate('/register')}
+                  onClick={() => navigate("/register")}
                 >
                   Registrarse
                 </Button>
@@ -97,7 +95,7 @@ const onValid = async (formData) => {
                 <div className="hidden md:block mt-2 pt-5">
                   <button
                     type="button"
-                    onClick={() => navigate('/')}
+                    onClick={() => navigate("/")}
                     className="text-sm px-3 py-1 rounded border w-full hover:bg-gray-50"
                   >
                     Volver al inicio
@@ -105,7 +103,9 @@ const onValid = async (formData) => {
                 </div>
 
                 {errorMessage && (
-                  <p className="text-red-400 mt-2">{errorMessage}</p>
+                  <p className="text-red-400 mt-2 text-center font-medium">
+                    {errorMessage}
+                  </p>
                 )}
               </form>
             </div>

@@ -2,10 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { format, parseISO, isValid } from "date-fns";
-import { es } from "date-fns/locale";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
-
+import { getMe } from "../../users/services/userService";
 import {
   getAvailableSlots,
   createReservation,
@@ -19,7 +18,7 @@ function formatTime(t) {
 }
 
 export default function CreateReservationPage() {
-  const { isAuthenticated, username } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -42,7 +41,7 @@ export default function CreateReservationPage() {
   const watchedDate = watch("date");
   const watchedTime = watch("time");
 
-  const [slots, setSlots] = useState([]);
+  const [slots, setSlots] = useState({ almuerzo: [], cena: [] });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [shift, setShift] = useState("dinner");
@@ -61,10 +60,18 @@ export default function CreateReservationPage() {
   };
 
   useEffect(() => {
-    if (isAuthenticated && username) {
-      setValue("clientName", username || "");
-    }
-  }, [isAuthenticated, username, setValue]);
+    if (!isAuthenticated) return;
+
+    const loadUser = async () => {
+      const { data } = await getMe();
+      if (data) {
+        setValue("clientName", data.userName || "");
+        setValue("email", data.email || "");
+      }
+    };
+
+    loadUser();
+  }, [isAuthenticated, setValue]);
 
   useEffect(() => {
     const loadSlots = async () => {
@@ -79,11 +86,7 @@ export default function CreateReservationPage() {
   }, [watchedDate, setValue]);
 
   const filteredSlots = useMemo(() => {
-    return slots.filter((time) => {
-      const hour = parseInt(time.split(":")[0], 10);
-      if (shift === "lunch") return hour < 17;
-      return hour >= 17;
-    });
+    return shift === "lunch" ? slots.almuerzo : slots.cena;
   }, [slots, shift]);
 
   const onSubmit = async (formData) => {
@@ -265,7 +268,7 @@ export default function CreateReservationPage() {
                   {...register("time", { required: "Selecciona un horario" })}
                 />
 
-                {filteredSlots.length === 0 ? (
+                {!filteredSlots || filteredSlots.length === 0 ? (
                   <div className="py-8 text-center border-2 border-dashed border-slate-700 rounded-lg text-gray-500">
                     No hay mesas disponibles para este turno.
                   </div>
@@ -321,25 +324,17 @@ export default function CreateReservationPage() {
                       </p>
                     )}
                   </div>
-
                   <div>
                     <label className="block text-xs font-bold text-gray-400 mb-1 uppercase">
-                      Email
+                      Email Registrado
                     </label>
                     <input
                       type="email"
-                      placeholder="contacto@email.com"
-                      {...register("email", {
-                        required: "Requerido",
-                        pattern: /^\S+@\S+$/i,
-                      })}
-                      className="w-full bg-slate-950 border border-slate-600 text-white rounded-lg px-4 py-2 focus:ring-amber-500 focus:border-amber-500"
+                      readOnly
+                      {...register("email")}
+                      className="w-full bg-slate-900 border border-slate-700 text-gray-500 rounded-lg px-4 py-2 cursor-not-allowed focus:outline-none"
+                      title="El email se toma de tu cuenta y no se puede modificar aquí"
                     />
-                    {errors.email && (
-                      <p className="text-red-500 text-xs mt-1">
-                        Email inválido
-                      </p>
-                    )}
                   </div>
                 </div>
 
