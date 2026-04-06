@@ -28,14 +28,19 @@ const ReservationForm = ({
   // 2. Cargar datos si estamos editando
   useEffect(() => {
     if (initialData) {
+      let formattedDate = "";
+      if (initialData.date) {
+        formattedDate = initialData.date.substring(0, 10);
+      }
+
       reset({
         clientName: initialData.clientName || "",
         email: initialData.email || "",
-        date: initialData.date || "",
+        date: formattedDate,
         time: initialData.time || "",
         pax: initialData.pax || 2,
         status: initialData.status || "Pendiente",
-        id: initialData.id,
+        id: initialData._id || initialData.id,
       });
     } else {
       // Si es modo crear, valores por defecto
@@ -154,7 +159,7 @@ const ReservationForm = ({
           disabled={isLoading}
           {...register("pax", {
             required: "Campo obligatorio",
-            valueAsNumber: true, 
+            valueAsNumber: true,
             min: { value: 1, message: "Mínimo 1 persona" },
             max: {
               value: 20,

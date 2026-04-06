@@ -1,11 +1,14 @@
-import { instance } from '../../shared/api/axiosInstance';
+import { instance } from "../../shared/api/axiosInstance";
 
 export const getAllUsers = async () => {
   try {
-    const { data } = await instance.get('/api/users');
+    const { data } = await instance.get("/api/users");
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Error al cargar usuarios' };
+    return {
+      data: null,
+      error: err.response?.data?.message || "Error al cargar usuarios",
+    };
   }
 };
 
@@ -14,16 +17,22 @@ export const getUserById = async (id) => {
     const { data } = await instance.get(`/api/users/${id}`);
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Usuario no encontrado' };
+    return {
+      data: null,
+      error: err.response?.data?.message || "Usuario no encontrado",
+    };
   }
 };
 
 export const createUser = async (userData) => {
   try {
-    const { data } = await instance.post('/api/users', userData);
+    const { data } = await instance.post("/api/users", userData);
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Error al crear usuario' };
+    return {
+      data: null,
+      error: err.response?.data?.message || "Error al crear usuario",
+    };
   }
 };
 
@@ -32,7 +41,10 @@ export const updateUser = async (id, updatedFields) => {
     const { data } = await instance.put(`/api/users/${id}`, updatedFields);
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Error al actualizar usuario' };
+    return {
+      data: null,
+      error: err.response?.data?.message || "Error al actualizar usuario",
+    };
   }
 };
 
@@ -41,7 +53,10 @@ export const suspendUser = async (id) => {
     const { data } = await instance.patch(`/api/users/${id}/suspend`);
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Error al suspender usuario' };
+    return {
+      data: null,
+      error: err.response?.data?.message || "Error al suspender usuario",
+    };
   }
 };
 
@@ -50,7 +65,10 @@ export const activateUser = async (id) => {
     const { data } = await instance.patch(`/api/users/${id}/activate`);
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Error al activar usuario' };
+    return {
+      data: null,
+      error: err.response?.data?.message || "Error al activar usuario",
+    };
   }
 };
 
@@ -59,6 +77,18 @@ export const deleteUser = async (id) => {
     await instance.delete(`/api/users/${id}`);
     return { data: true, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Error al eliminar usuario' };
+    return {
+      data: null,
+      error: err.response?.data?.message || "Error al eliminar usuario",
+    };
+  }
+};
+
+export const getMe = async () => {
+  try {
+    const { data } = await instance.get("/api/users/me");
+    return { data, error: null };
+  } catch (err) {
+    return { data: null, error: err.response?.data?.message || "Error" };
   }
 };

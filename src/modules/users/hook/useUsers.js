@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   getAllUsers,
   createUser as createUserService,
@@ -6,7 +6,7 @@ import {
   deleteUser as deleteUserService,
   suspendUser,
   activateUser,
-} from '../services/userService';
+} from "../services/userService";
 
 export const useUsers = () => {
   const [users, setUsers] = useState([]);
@@ -28,43 +28,48 @@ export const useUsers = () => {
   const handleDeleteUser = async (id) => {
     const { error } = await deleteUserService(id);
     if (error) {
-      alert('Error al eliminar: ' + error);
+      alert("Error al eliminar: " + error);
       return;
     }
-    setUsers((prev) => prev.filter((u) => u.id !== id));
+    setUsers((prev) => prev.filter((u) => (u._id || u.id) !== id));
   };
 
-  // Suspender/Activar — llama al endpoint correcto según estado actual
   const handleStatusChange = async (id, accion) => {
-    const { data, error } = accion === 'Suspender'
-      ? await suspendUser(id)
-      : await activateUser(id);
+    const { data, error } =
+      accion === "Suspender" ? await suspendUser(id) : await activateUser(id);
 
     if (error) {
-      alert('Error al actualizar estado: ' + error);
+      alert("Error al actualizar estado: " + error);
       return;
     }
 
-    // Actualizamos el estado local con lo que devuelve el back
-    setUsers((prev) => prev.map((u) => (u.id === id ? data : u)));
+    setUsers((prev) =>
+      prev.map((u) => ((u._id || u.id) === id ? data.user || data : u)),
+    );
   };
 
   const updateUser = async (id, formData) => {
     const { data, error } = await updateUserService(id, formData);
     if (error) {
-      alert('Error al actualizar: ' + error);
+      alert("Error al actualizar: " + error);
       return;
     }
-    setUsers((prev) => prev.map((u) => (u.id === id ? data : u)));
+
+    const updatedUser = data.data || data.user || data;
+    setUsers((prev) =>
+      prev.map((u) => ((u._id || u.id) === id ? updatedUser : u)),
+    );
   };
 
   const createUser = async (formData) => {
     const { data, error } = await createUserService(formData);
     if (error) {
-      alert('Error al crear usuario: ' + error);
+      alert("Error al crear usuario: " + error);
       return;
     }
-    setUsers((prev) => [...prev, data]);
+
+    const newUser = data.data || data.user || data;
+    setUsers((prev) => [...prev, newUser]);
   };
 
   return {

@@ -9,7 +9,7 @@ const UserForm = ({ initialData, onSubmit, onCancel }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "",
+      userName: "",
       email: "",
       phone: "",
       role: "User",
@@ -18,10 +18,13 @@ const UserForm = ({ initialData, onSubmit, onCancel }) => {
 
   useEffect(() => {
     if (initialData) {
-      reset(initialData);
+      reset({
+        ...initialData,
+        userName: initialData.userName || initialData.name || "",
+      });
     } else {
       reset({
-        name: "",
+        userName: "",
         email: "",
         phone: "",
         role: "User",
@@ -41,7 +44,7 @@ const UserForm = ({ initialData, onSubmit, onCancel }) => {
         </label>
         <input
           type="text"
-          {...register("name", {
+          {...register("userName", {
             required: "El nombre es obligatorio",
             minLength: {
               value: 3,
@@ -49,10 +52,10 @@ const UserForm = ({ initialData, onSubmit, onCancel }) => {
             },
           })}
           className={`mt-1 block w-full border rounded-md shadow-sm p-2 focus:ring-amber-500 focus:border-amber-500 
-            ${errors.name ? "border-red-500" : "border-gray-300"}`}
+            ${errors.userName ? "border-red-500" : "border-gray-300"}`}
         />
-        {errors.name && (
-          <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+        {errors.userName && (
+          <p className="text-red-500 text-xs mt-1">{errors.userName.message}</p>
         )}
       </div>
 
