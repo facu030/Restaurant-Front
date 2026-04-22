@@ -5,31 +5,27 @@ const instance = axios.create({
   withCredentials: true,
 });
 
+// Inyecta el token en cada request automáticamente
 instance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
-
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
     return config;
   },
   (error) => Promise.reject(error),
 );
 
+// Manejo global de errores de respuesta
 instance.interceptors.response.use(
-  (config) => { return config; },
+  (response) => response,
   (error) => {
-    if (error.status === 401) {
-      if (window.location.pathname.includes('/admin/')) {
-        localStorage.clear();
-        window.location.href = '/login';
-      } else {
-        localStorage.removeItem('token');
-      }
+    // Si el token expiró o es inválido, limpiamos y redirigimos
+    if (error.response?.status === 401) {
+      localStorage.clear();
+      window.location.href = '/login';
     }
-
     return Promise.reject(error);
   },
 );

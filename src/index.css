@@ -1,10 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
 @import "tailwindcss";
 
-@layer base {
-  body {
-    @apply m-0 text-[2rem] h-[100dvh] sm:text-base bg-gray-100;
-  }
-  #root {
-    @apply h-[100dvh];
-  }
+/* ============================================================
+   VARIABLES
+   ============================================================ */
+:root {
+  --accent:     #c47a00;
+  --accent-200: #fde68a;
+  --accent-300: #fdba74;
+  --accent-600: #b45309;
+  --accent-700: #7f4700;
+
+  --bg:      #f3f4f6;
+  --card:    #ffffff;
+  --surface: #ffffff;
+  --text:    #0f172a;
+  --muted:   #6b7280;
+  --border:  #e5e7eb;
+
+  --radius-lg: 0.75rem;
+
+  /* React Day Picker */
+  --rdp-cell-size:       45px;
+  --rdp-accent-color:    #d97706;
+  --rdp-background-color:#b45309;
 }
+
+.dark {
+  --accent:     #f59e0b;
+  --accent-200: #f7c948;
+  --accent-300: #fb923c;
+  --accent-600: #ea580c;
+  --accent-700: #7f4700;
+
+  --bg:      #071627;
+  --card:    #071827;
+  --surface: #06121a;
+  --text:    #e6eef8;
+  --muted:   #94a3b8;
+  --border:  rgba(255, 255, 255, 0.04);
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+@layer base {
+  html {
+    background-color: var(--bg);
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply m-0 h-[100dvh] text-base;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 160ms ease, color 160ms ease;
+  }
+
+  #root { @apply h-[100dvh]; }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    color: var(--text);
+    margin-top: 0;
+    line-height: 1.1;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  button, input, textarea, select {
+    font-family: inherit;
+    color: inherit;
+    background-color: transparent;
+    border-radius: 0.5rem;
+    transition: box-shadow 150ms ease, border-color 150ms ease, background-color 150ms ease;
+  }
+
+  /* Inputs numéricos y de fecha */
+  input[type="date"],
+  input[type="number"] {
+    color-scheme: dark;
+    background-color: transparent;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.85;
+  }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    filter: invert(1);
+    opacity: 0.85;
+  }
+
+  ::placeholder { color: rgba(107, 114, 128, 0.7); }
+}
+
+/* ============================================================
+   UTILIDADES DE ACCENT (CSS vars → clases Tailwind-like)
+   ============================================================ */
+.text-accent                { color: var(--accent) !important; }
+.bg-accent-200              { background-color: var(--accent-200) !important; }
+.bg-accent-300              { background-color: var(--accent-300) !important; }
+.bg-accent-600              { background-color: var(--accent-600) !important; color: #fff !important; }
+.hover\:bg-accent-700:hover { background-color: var(--accent-700) !important; }
+.border-accent-500          { border-color: var(--accent-600) !important; }
+.focus\:ring-accent:focus   { box-shadow: 0 0 0 3px rgba(196, 122, 0, 0.15) !important; }
+
+/* ============================================================
+   DARK MODE OVERRIDES
+   ============================================================ */
+.dark ::placeholder              { color: rgba(230, 238, 248, 0.45) !important; }
+.dark .text-gray-50              { color: #f8fafc !important; }
+.dark .text-gray-100             { color: #f1f5f9 !important; }
+.dark .text-gray-200             { color: #e6eef8 !important; }
+.dark .text-gray-300             { color: #cbd5e1 !important; }
+.dark .text-gray-400             { color: #9aa4b2 !important; }
+.dark .text-gray-500             { color: #94a3b8 !important; }
+.dark .text-gray-600             { color: #7b8794 !important; }
+.dark .text-gray-700             { color: #5b6880 !important; }
+.dark .border-gray-200           { border-color: rgba(255, 255, 255, 0.04) !important; }
+.dark .rounded-xl.border         { border-color: rgba(255, 255, 255, 0.04) !important; }
+.dark .bg-white                  { background-color: var(--card) !important; color: var(--text) !important; }
+.dark .bg-gray-50                { background-color: #071627 !important; }
+.dark .bg-gray-100               { background-color: #071c2a !important; }
+.dark .hover\:bg-gray-50:hover   { background-color: rgba(255, 255, 255, 0.03) !important; }
+.dark table, .dark th, .dark td  { color: var(--text) !important; }
+
+/* ============================================================
+   REACT DAY PICKER (CalendarSelector)
+   ============================================================ */
+.rdp { margin: 0; }
+
+.rdp-day,
+.rdp-caption_label,
+.rdp-head_cell {
+  color: #e2e8f0;
+}
+
+.rdp-day_selected:not([aria-disabled="true"]) {
+  background-color: var(--rdp-accent-color);
+  color: white;
+  font-weight: bold;
+  border: 2px solid #fbbf24;
+}
+
+.rdp-day:hover:not([aria-disabled="true"]):not(.rdp-day_selected) {
+  background-color: #334155;
+  border-radius: 50%;
+}
+
+.rdp-day_today         { font-weight: bold; color: #fbbf24; }
+.rdp-nav_icon          { fill: #e2e8f0; }
+.rdp-button:hover:not([aria-disabled="true"]) { background-color: #334155; }
+
+/* ============================================================
+   MISC
+   ============================================================ */
+.rounded-4xl { border-radius: 2rem; }
+.force-card  { background-color: var(--card) !important; color: var(--text) !important; }

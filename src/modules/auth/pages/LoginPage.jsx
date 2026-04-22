@@ -6,8 +6,8 @@ function LoginPage() {
       flex
       flex-col
       justify-center
+      bg-amber-950
       h-[100dvh]
-      bg-neutral-100
       sm:items-center
     '>
       <LoginForm />
