@@ -161,10 +161,6 @@ const ReservationForm = ({
             required: "Campo obligatorio",
             valueAsNumber: true,
             min: { value: 1, message: "Mínimo 1 persona" },
-            max: {
-              value: 20,
-              message: "Máximo 20 personas (para más, contáctenos)",
-            },
           })}
           className={`w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-accent 
             ${errors.pax ? "border-red-500" : "border-gray-300"}`}

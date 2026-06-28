@@ -40,11 +40,11 @@ function DashboardPage() {
   };
 
   return (
-    <div>
+    <div className="text-gray-900 dark:text-slate-100">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-        <h2 className="text-2xl font-bold text-gray-800">Resumen del Restaurante</h2>
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-slate-100">Resumen del Restaurante</h2>
         
-        <div className="bg-white p-1 rounded-lg shadow-sm border border-gray-200 flex">
+        <div className="bg-white p-1 rounded-lg shadow-sm border border-gray-200 flex dark:border-slate-700 dark:bg-slate-900">
           {[
             { key: 'day', label: 'Hoy' },
             { key: 'month', label: 'Este Mes' },
@@ -56,7 +56,7 @@ function DashboardPage() {
               className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
                 timeFilter === filter.key
                   ? 'bg-orange-500 text-white shadow-sm'
-                  : 'text-gray-600 hover:bg-gray-50'
+                  : 'text-gray-600 hover:bg-gray-50 dark:text-slate-300 dark:hover:bg-slate-800'
               }`}
             >
               {filter.label}
@@ -67,23 +67,23 @@ function DashboardPage() {
       
       {/* --- KPI CARDS --- */}
       <div className="flex flex-col gap-4 sm:grid sm:grid-cols-3 mb-8">
-        <Card className="p-4 border-l-4 border-blue-500 bg-white shadow-sm">
-          <h3 className="text-gray-500 text-sm uppercase font-semibold">Total Reservas</h3>
-          <p className="text-3xl font-bold text-gray-800">
+        <Card className="p-4 border-l-4 border-blue-500 bg-white shadow-sm dark:border-y-slate-800 dark:border-r-slate-800 dark:bg-slate-900">
+          <h3 className="text-gray-500 text-sm uppercase font-semibold dark:text-slate-400">Total Reservas</h3>
+          <p className="text-3xl font-bold text-gray-800 dark:text-slate-100">
             {stats ? stats.total : '...'}
           </p>
         </Card>
 
-        <Card className="p-4 border-l-4 border-purple-500 bg-white shadow-sm">
-          <h3 className="text-gray-500 text-sm uppercase font-semibold">Confirmadas</h3>
-          <p className="text-3xl font-bold text-gray-800">
+        <Card className="p-4 border-l-4 border-purple-500 bg-white shadow-sm dark:border-y-slate-800 dark:border-r-slate-800 dark:bg-slate-900">
+          <h3 className="text-gray-500 text-sm uppercase font-semibold dark:text-slate-400">Confirmadas</h3>
+          <p className="text-3xl font-bold text-gray-800 dark:text-slate-100">
             {stats ? stats.confirmed : '...'}
           </p>
         </Card>
 
-        <Card className="p-4 border-l-4 border-orange-500 bg-white shadow-sm">
-          <h3 className="text-gray-500 text-sm uppercase font-semibold">Pendientes</h3>
-          <p className="text-3xl font-bold text-gray-800">
+        <Card className="p-4 border-l-4 border-orange-500 bg-white shadow-sm dark:border-y-slate-800 dark:border-r-slate-800 dark:bg-slate-900">
+          <h3 className="text-gray-500 text-sm uppercase font-semibold dark:text-slate-400">Pendientes</h3>
+          <p className="text-3xl font-bold text-gray-800 dark:text-slate-100">
             {stats ? stats.pending : '...'}
           </p>
         </Card>
@@ -92,13 +92,13 @@ function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 h-[450px]">
           {loadingCharts
-            ? <div className="animate-pulse bg-gray-100 rounded-xl h-full" />
+            ? <div className="animate-pulse bg-gray-100 rounded-xl h-full dark:bg-slate-800" />
             : <TrendChart title={getChartTitle()} data={trendData} />
           }
         </div>
         <div className="lg:col-span-1 h-[450px]">
           {loadingCharts
-            ? <div className="animate-pulse bg-gray-100 rounded-xl h-full" />
+            ? <div className="animate-pulse bg-gray-100 rounded-xl h-full dark:bg-slate-800" />
             : <PeakHoursChart data={peakData} />
           }
         </div>

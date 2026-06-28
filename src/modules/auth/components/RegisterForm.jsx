@@ -16,12 +16,13 @@ function RegisterForm({ onSuccess }) {
     watch,
     formState: { errors },
   } = useForm({
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
+      defaultValues: {
+        username: "",
+        email: "",
+        phone: "",
+        password: "",
+        confirmPassword: "",
+      },
   });
 
   const password = watch("password");
@@ -30,7 +31,8 @@ function RegisterForm({ onSuccess }) {
     const { error, role } = await signup(
       formData.username,
       formData.email,
-      formData.password
+      formData.password,
+      formData.phone
     );
 
     if (error) {
@@ -69,6 +71,21 @@ function RegisterForm({ onSuccess }) {
           },
         })}
         error={errors.email?.message}
+      />
+
+      <Input
+        label="Teléfono (opcional)"
+        {...register("phone", {
+          pattern: {
+            value: /^[0-9+()\-\s]*$/,
+            message: "Ingrese un teléfono válido",
+          },
+          maxLength: {
+            value: 30,
+            message: "Máximo 30 caracteres",
+          },
+        })}
+        error={errors.phone?.message}
       />
 
       <Input

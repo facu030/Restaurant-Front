@@ -6,8 +6,8 @@ const authService = {
     return data; // { token, user: { userName, role, ... } }
   },
 
-  register: async (username, email, password) => {
-    const { data } = await instance.post('/api/auth/register', { username, email, password });
+  register: async (username, email, password, phone = '') => {
+    const { data } = await instance.post('/api/auth/register', { username, email, password, phone });
     return data; // { token, user: { userName, role, ... } }
   },
 };

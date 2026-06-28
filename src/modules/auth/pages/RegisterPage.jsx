@@ -7,11 +7,11 @@ function RegisterPage() {
   const navigate = useNavigate();
 
   return (
-    <div className='min-h-screen flex items-center justify-center px-4 bg-amber-950 py-10'>
+    <div className='min-h-screen flex items-center justify-center px-4 bg-amber-950 py-8'>
 
       <div className='w-full max-w-4xl mx-auto'>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 bg-white rounded-2xl shadow-2xl overflow-hidden'>
+         <div className='grid grid-cols-1 md:grid-cols-2 bg-white rounded-2xl shadow-2xl overflow-hidden'>
           
           <div className='relative p-8 md:p-10 flex flex-col justify-center'>
             
@@ -28,7 +28,7 @@ function RegisterPage() {
             </div>
 
             <div className="mb-6 hidden md:block">
-               <h2 className="text-3xl font-extrabold text-white">Crear Cuenta</h2>
+                <h2 className="text-3xl font-extrabold text-gray-900">Crear Cuenta</h2>
                <p className="text-gray-500 text-sm mt-1">
                  Regístrate para gestionar tus reservas fácilmente.
                </p>

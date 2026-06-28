@@ -2,10 +2,10 @@ import { useMemo } from 'react';
 
 // Sub-componente tarjeta (para no repetir código HTML)
 const StatCard = ({ title, value, color, icon }) => (
-  <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between">
+  <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between dark:border-slate-800 dark:bg-slate-900">
     <div>
-      <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
-      <h3 className="text-2xl font-bold text-gray-800">{value}</h3>
+      <p className="text-sm font-medium text-gray-500 mb-1 dark:text-slate-400">{title}</p>
+      <h3 className="text-2xl font-bold text-gray-800 dark:text-slate-100">{value}</h3>
     </div>
     <div className={`p-3 rounded-full ${color} bg-opacity-20`}>
       {icon}

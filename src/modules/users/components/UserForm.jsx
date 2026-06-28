@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-const UserForm = ({ initialData, onSubmit, onCancel }) => {
+const UserForm = ({ initialData, onSubmit, onCancel, isLoading = false }) => {
   const {
     register,
     handleSubmit,
@@ -44,6 +44,7 @@ const UserForm = ({ initialData, onSubmit, onCancel }) => {
         </label>
         <input
           type="text"
+          disabled={isLoading}
           {...register("userName", {
             required: "El nombre es obligatorio",
             minLength: {
@@ -63,6 +64,7 @@ const UserForm = ({ initialData, onSubmit, onCancel }) => {
         <label className="block text-sm font-medium text-gray-700">Email</label>
         <input
           type="email"
+          disabled={isLoading}
           {...register("email", {
             required: "El email es obligatorio",
             pattern: {
@@ -84,14 +86,30 @@ const UserForm = ({ initialData, onSubmit, onCancel }) => {
         </label>
         <input
           type="text"
-          {...register("phone")}
-          className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-amber-500 focus:border-amber-500"
+          disabled={isLoading}
+          {...register("phone", {
+            pattern: {
+              value: /^[0-9+()\-\s]*$/,
+              message: "Ingrese un teléfono válido",
+            },
+            maxLength: {
+              value: 30,
+              message: "Máximo 30 caracteres",
+            },
+          })}
+          className={`mt-1 block w-full border rounded-md shadow-sm p-2 focus:ring-amber-500 focus:border-amber-500 ${
+            errors.phone ? "border-red-500" : "border-gray-300"
+          }`}
         />
+        {errors.phone && (
+          <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
+        )}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-gray-700">Rol</label>
         <select
+          disabled={isLoading}
           {...register("role", { required: true })}
           className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-amber-500 focus:border-amber-500"
         >
@@ -103,6 +121,7 @@ const UserForm = ({ initialData, onSubmit, onCancel }) => {
       <div className="flex justify-end gap-3 pt-4">
         <button
           type="button"
+          disabled={isLoading}
           onClick={onCancel}
           className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
         >
@@ -110,9 +129,10 @@ const UserForm = ({ initialData, onSubmit, onCancel }) => {
         </button>
         <button
           type="submit"
+          disabled={isLoading}
           className="px-4 py-2 text-sm font-medium text-white bg-amber-600 rounded-md hover:bg-amber-700 shadow-sm transition-colors"
         >
-          {initialData ? "Guardar Cambios" : "Crear Usuario"}
+          {isLoading ? "Guardando..." : "Guardar Cambios"}
         </button>
       </div>
     </form>

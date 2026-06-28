@@ -17,6 +17,12 @@ function formatTime(t) {
   return t;
 }
 
+function getCapacityConflictMessage(details) {
+  if (details?.code !== "SLOT_CAPACITY_EXCEEDED") return null;
+
+  return `El horario ${details.time} tiene ${details.remaining} lugares disponibles y solicitaste ${details.requested}. Capacidad total: ${details.capacity}.`;
+}
+
 export default function CreateReservationPage() {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -136,13 +142,14 @@ export default function CreateReservationPage() {
       setMessage("¡Éxito! Tu reserva ha sido confirmada.");
       setTimeout(() => navigate("/mis-reservas"), 2000);
     } else {
-      const isConflict =
-        error?.status === 409 || error?.message?.includes("ocupado");
+      const capacityMessage = getCapacityConflictMessage(error?.details);
+      const isConflict = error?.status === 409;
       if (isConflict) {
         confirmAlert({
-          title: "Horario no disponible",
+          title: "Capacidad insuficiente",
           message:
-            "Lo sentimos, este horario acaba de ocuparse. Por favor selecciona otro.",
+            capacityMessage ||
+            "Lo sentimos, este horario ya no tiene capacidad suficiente. Por favor selecciona otro.",
           buttons: [{ label: "Entendido", onClick: () => {} }],
         });
         const { data: newSlots } = await getAvailableSlots(watchedDate);
@@ -221,7 +228,7 @@ export default function CreateReservationPage() {
                   <button
                     type="button"
                     onClick={() => {
-                      const val = Math.min(20, (watch("pax") || 2) + 1);
+                      const val = (watch("pax") || 2) + 1;
                       setValue("pax", val);
                     }}
                     className="w-12 h-12 rounded-full bg-slate-700 text-white text-xl hover:bg-amber-600 transition-colors"

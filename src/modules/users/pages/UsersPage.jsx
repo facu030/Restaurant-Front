@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useUsers } from "../hook/useUsers";
 import UsersTable from "../components/UsersTable";
 import UsersForm from "../components/UserForm";
@@ -28,7 +28,6 @@ const UsersPage = () => {
     handleDeleteUser,
     handleStatusChange,
     updateUser,
-    createUser,
   } = useUsers();
 
   // --- Lógica de Filtrado Optimizada ---
@@ -57,11 +56,6 @@ const UsersPage = () => {
   }, [users, searchTerm, roleFilter, statusFilter]);
 
   // --- Handlers del Modal ---
-  const handleOpenCreate = () => {
-    setEditingUser(null);
-    setIsModalOpen(true);
-  };
-
   const handleOpenEdit = (user) => {
     setEditingUser(user);
     setIsModalOpen(true);
@@ -77,13 +71,9 @@ const UsersPage = () => {
   const handleSaveUser = async (formData) => {
     setIsSaving(true);
     try {
-      if (editingUser) {
-        const idToUpdate = editingUser._id || editingUser.id;
-        await updateUser(idToUpdate, formData);
-      } else {
-        await createUser(formData);
-      }
-      handleCloseModal(); //cerramos si tuvo éxito
+      const idToUpdate = editingUser._id || editingUser.id;
+      const saved = await updateUser(idToUpdate, formData);
+      if (saved) handleCloseModal(); //cerramos si tuvo éxito
     } catch (error) {
       console.error("Error al guardar el usuario:", error);
       // Aquí idealmente mostrarías un toast/alerta al usuario
@@ -95,16 +85,15 @@ const UsersPage = () => {
 
   // --- Helper visual ---
   const getModalTitle = () => {
-    if (!editingUser) return "Crear Nuevo Usuario";
-    const id = editingUser._id || editingUser.id;
-    return `Editar Usuario #${id ? String(id).substring(0, 6) : "..."}`;
+    if (!editingUser) return "Editar Usuario";
+    return "Editar Usuario";
   };
 
   // --- Renderizados Condicionales ---
   if (loading) {
     return (
-      <div className="p-10 flex justify-center items-center h-screen">
-        <span className="text-gray-500 animate-pulse text-lg">
+      <div className="p-10 flex justify-center items-center h-screen dark:bg-slate-950">
+        <span className="text-gray-500 animate-pulse text-lg dark:text-slate-400">
           Cargando usuarios...
         </span>
       </div>
@@ -112,33 +101,27 @@ const UsersPage = () => {
   }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gray-50 min-h-screen dark:bg-slate-950">
       <div className="max-w-7xl mx-auto">
         {/* Encabezado */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-800">
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-slate-100">
               Gestión de Usuarios
             </h1>
-            <p className="text-gray-500">
+            <p className="text-gray-500 dark:text-slate-400">
               Administra los usuarios registrados en el sistema
             </p>
           </div>
-          <button
-            onClick={handleOpenCreate}
-            className="bg-amber-600 hover:bg-amber-700 text-white px-5 py-2.5 rounded-lg font-medium shadow-sm transition-colors flex items-center gap-2"
-          >
-            <span>+</span> Nuevo Usuario
-          </button>
         </div>
 
         {/* Estadísticas */}
         <UsersStats users={users} />
 
         {/* Tabla y Filtros */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden p-6 mt-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden p-6 mt-6 dark:border-slate-800 dark:bg-slate-900">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
-            <h2 className="text-xl font-bold text-gray-800">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-slate-100">
               Lista de Usuarios
             </h2>
             <UsersFilter
@@ -159,8 +142,8 @@ const UsersPage = () => {
           />
 
           {filteredUsers.length === 0 && (
-            <div className="p-12 text-center text-gray-500 bg-gray-50 rounded-lg mt-4 border border-dashed border-gray-200">
-              <p className="text-lg font-medium text-gray-600">
+            <div className="p-12 text-center text-gray-500 bg-gray-50 rounded-lg mt-4 border border-dashed border-gray-200 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400">
+              <p className="text-lg font-medium text-gray-600 dark:text-slate-300">
                 No se encontraron usuarios
               </p>
               <p className="text-sm">
@@ -177,12 +160,14 @@ const UsersPage = () => {
         title={getModalTitle()}
         onClose={handleCloseModal}
       >
-        <UsersForm
-          initialData={editingUser}
-          onSubmit={handleSaveUser}
-          onCancel={handleCloseModal}
-          isLoading={isSaving}
-        />
+        {editingUser && (
+          <UsersForm
+            initialData={editingUser}
+            onSubmit={handleSaveUser}
+            onCancel={handleCloseModal}
+            isLoading={isSaving}
+          />
+        )}
       </Modal>
     </div>
   );

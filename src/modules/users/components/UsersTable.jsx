@@ -70,6 +70,8 @@ const TrashIcon = () => (
 );
 
 const UsersTable = ({ users, onDelete, onStatusChange, onEdit }) => {
+  const isAdminUser = (user) => String(user.role).toLowerCase() === "admin";
+
   const showConfirm = ({
     title,
     message,
@@ -80,12 +82,12 @@ const UsersTable = ({ users, onDelete, onStatusChange, onEdit }) => {
     confirmAlert({
       customUI: ({ onClose }) => {
         return (
-          <div className="bg-white p-6 rounded-xl shadow-2xl max-w-md w-full border border-gray-100 text-left font-sans">
-            <h1 className="text-xl font-bold text-gray-900 mb-2">{title}</h1>
-            <p className="text-gray-600 mb-6 leading-relaxed">{message}</p>
+          <div className="bg-white p-6 rounded-xl shadow-2xl max-w-md w-full border border-gray-100 text-left font-sans dark:border-slate-800 dark:bg-slate-900">
+            <h1 className="text-xl font-bold text-gray-900 mb-2 dark:text-slate-100">{title}</h1>
+            <p className="text-gray-600 mb-6 leading-relaxed dark:text-slate-300">{message}</p>
             <div className="flex justify-end gap-3">
               <button
-                className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors focus:outline-none"
+                className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors focus:outline-none dark:text-slate-300 dark:hover:bg-slate-800"
                 onClick={onClose}
               >
                 Cancelar
@@ -107,6 +109,8 @@ const UsersTable = ({ users, onDelete, onStatusChange, onEdit }) => {
   };
 
   const handleDelete = (user) => {
+    if (isAdminUser(user)) return;
+
     const nombreParaMostrar = user.userName || user.name || "este usuario";
     showConfirm({
       title: "Eliminar Usuario",
@@ -120,6 +124,8 @@ const UsersTable = ({ users, onDelete, onStatusChange, onEdit }) => {
   };
 
   const handleStatus = (user) => {
+    if (isAdminUser(user)) return;
+
     const esActivo = user.status === "Activo";
     const nuevaAccion = esActivo ? "Suspender" : "Activar";
     const nombreParaMostrar = user.userName || user.name || "este usuario";
@@ -141,24 +147,18 @@ const UsersTable = ({ users, onDelete, onStatusChange, onEdit }) => {
     if (onEdit) onEdit(user);
   };
 
-  const getShortId = (id) => {
-    if (!id) return "-";
-    return String(id).substring(0, 6);
-  };
-
   if (!users || users.length === 0)
     return (
-      <div className="p-8 text-center text-gray-500">
+      <div className="p-8 text-center text-gray-500 dark:text-slate-400">
         No hay usuarios registrados.
       </div>
     );
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
-      <table className="w-full text-left border-collapse min-w-[800px]">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto dark:border-slate-800 dark:bg-slate-900">
+      <table className="w-full text-left border-collapse min-w-[700px]">
         <thead>
-          <tr className="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500 font-semibold tracking-wider">
-            <th className="p-4">ID</th>
+          <tr className="bg-gray-50 border-b border-gray-200 text-xs uppercase text-gray-500 font-semibold tracking-wider dark:border-slate-800 dark:bg-slate-950 dark:text-slate-400">
             <th className="p-4">Nombre</th>
             <th className="p-4">Email</th>
             <th className="p-4">Teléfono</th>
@@ -167,20 +167,20 @@ const UsersTable = ({ users, onDelete, onStatusChange, onEdit }) => {
             <th className="p-4 text-right">Acciones</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100 text-sm text-gray-700">
-          {users.map((user) => (
+        <tbody className="divide-y divide-gray-100 text-sm text-gray-700 dark:divide-slate-800 dark:text-slate-200">
+          {users.map((user) => {
+            const isAdmin = isAdminUser(user);
+
+            return (
             <tr
               key={user._id || user.id}
-              className="hover:bg-gray-50 transition-colors"
+              className="hover:bg-gray-50 transition-colors dark:hover:bg-slate-800/70"
             >
-              <td className="p-4 font-medium text-gray-900">
-                #{getShortId(user._id || user.id)}
-              </td>
-              <td className="p-4 font-semibold">
+              <td className="p-4 font-semibold dark:text-slate-100">
                 {user.userName || user.name || "-"}
               </td>
-              <td className="p-4 text-gray-500">{user.email || "-"}</td>
-              <td className="p-4 text-gray-500">{user.phone || "-"}</td>
+              <td className="p-4 text-gray-500 dark:text-slate-400">{user.email || "-"}</td>
+              <td className="p-4 text-gray-500 dark:text-slate-400">{user.phone || "-"}</td>
               <td className="p-4">
                 <span
                   className={`px-2.5 py-1 rounded-full text-xs font-bold ${
@@ -207,42 +207,51 @@ const UsersTable = ({ users, onDelete, onStatusChange, onEdit }) => {
               <td className="p-4 flex gap-2 justify-end">
                 <button
                   onClick={() => handleEdit(user)}
-                  className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors dark:text-slate-500 dark:hover:bg-blue-500/10 dark:hover:text-blue-300"
                   title="Editar"
                 >
                   <EditIcon />
                 </button>
 
-                <button
-                  onClick={() => handleStatus(user)}
-                  className={`p-2 rounded-lg transition-colors ${
-                    user.status === "Activo" || !user.status
-                      ? "text-gray-400 hover:text-amber-600 hover:bg-amber-50"
-                      : "text-gray-400 hover:text-green-600 hover:bg-green-50"
-                  }`}
-                  title={
-                    user.status === "Activo" || !user.status
-                      ? "Suspender"
-                      : "Activar"
-                  }
-                >
-                  {user.status === "Activo" || !user.status ? (
-                    <SuspendIcon />
-                  ) : (
-                    <ActivateIcon />
-                  )}
-                </button>
+                {isAdmin ? (
+                  <span className="px-3 py-2 text-xs font-semibold text-gray-500 bg-gray-100 rounded-lg dark:bg-slate-800 dark:text-slate-400">
+                    Protegido
+                  </span>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => handleStatus(user)}
+                      className={`p-2 rounded-lg transition-colors ${
+                        user.status === "Activo" || !user.status
+                          ? "text-gray-400 hover:text-amber-600 hover:bg-amber-50 dark:text-slate-500 dark:hover:bg-amber-500/10 dark:hover:text-amber-300"
+                          : "text-gray-400 hover:text-green-600 hover:bg-green-50 dark:text-slate-500 dark:hover:bg-green-500/10 dark:hover:text-green-300"
+                      }`}
+                      title={
+                        user.status === "Activo" || !user.status
+                          ? "Suspender"
+                          : "Activar"
+                      }
+                    >
+                      {user.status === "Activo" || !user.status ? (
+                        <SuspendIcon />
+                      ) : (
+                        <ActivateIcon />
+                      )}
+                    </button>
 
-                <button
-                  onClick={() => handleDelete(user)}
-                  className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                  title="Eliminar"
-                >
-                  <TrashIcon />
-                </button>
+                    <button
+                      onClick={() => handleDelete(user)}
+                      className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors dark:text-slate-500 dark:hover:bg-red-500/10 dark:hover:text-red-300"
+                      title="Eliminar"
+                    >
+                      <TrashIcon />
+                    </button>
+                  </>
+                )}
               </td>
             </tr>
-          ))}
+          );
+          })}
         </tbody>
       </table>
     </div>

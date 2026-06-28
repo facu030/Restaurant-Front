@@ -10,6 +10,15 @@ import {
   deleteReservation,
 } from "../../reservations/services/reservationService";
 
+const getReservationErrorMessage = (error) => {
+  if (error?.details?.code === "SLOT_CAPACITY_EXCEEDED") {
+    const { time, remaining, requested, capacity } = error.details;
+    return `El horario ${time} tiene ${remaining} lugares disponibles y solicitaste ${requested}. Capacidad total: ${capacity}.`;
+  }
+
+  return error?.message || error || "Error desconocido";
+};
+
 function ReservationsListPage() {
   const [reservations, setReservations] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,10 +52,8 @@ function ReservationsListPage() {
     return reservations.filter((r) => {
       const client = (r.clientName ?? r.client ?? "").toLowerCase();
       const email = (r.email ?? "").toLowerCase();
-      const id = String(r._id ?? r.id ?? "");
-
       const matchSearch =
-        !s || client.includes(s) || email.includes(s) || id.includes(s);
+        !s || client.includes(s) || email.includes(s);
 
       const matchStatus =
         statusFilter === "all"
@@ -83,8 +90,8 @@ function ReservationsListPage() {
 
   const handleDelete = async (id) => {
     const { error } = await deleteReservation(id);
-    if (error) {
-      alert("Error al eliminar: " + error);
+      if (error) {
+        alert("Error al eliminar: " + getReservationErrorMessage(error));
       return;
     }
     setReservations((prev) => prev.filter((r) => r._id !== id && r.id !== id));
@@ -110,7 +117,7 @@ function ReservationsListPage() {
       } else {
         alert(
           "Error al guardar: " +
-            (error?.message || error || "Error desconocido"),
+            getReservationErrorMessage(error),
         );
       }
     } finally {
@@ -118,20 +125,14 @@ function ReservationsListPage() {
     }
   };
 
-  const getDisplayId = (reserva) => {
-    if (!reserva) return "";
-    const id = reserva._id || reserva.id;
-    return id ? String(id).substring(0, 6) : "";
-  };
-
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gray-50 min-h-screen dark:bg-slate-950">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">
+          <h1 className="text-3xl font-bold text-gray-800 dark:text-slate-100">
             Gestión de Reservas
           </h1>
-          <p className="text-gray-500">
+          <p className="text-gray-500 dark:text-slate-400">
             Administra las reservas del restaurante
           </p>
         </div>
@@ -139,20 +140,20 @@ function ReservationsListPage() {
 
       <ReservationStatsCards stats={stats} />
 
-      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-800">Lista de Reservas</h2>
+          <h2 className="text-xl font-bold text-gray-800 dark:text-slate-100">Lista de Reservas</h2>
 
           <div className="flex flex-col gap-3 md:flex-row md:items-center w-full md:w-auto">
             <input
-              className="w-full md:w-64 rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+              className="w-full md:w-64 rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
               placeholder="Buscar cliente, email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
 
             <select
-              className="w-full md:w-48 rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none bg-white"
+              className="w-full md:w-48 rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-purple-500 focus:outline-none bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
             >
@@ -165,7 +166,7 @@ function ReservationsListPage() {
         </div>
 
         {loading ? (
-          <div className="text-center py-10 text-gray-500 animate-pulse">
+          <div className="text-center py-10 text-gray-500 animate-pulse dark:text-slate-400">
             Cargando reservas...
           </div>
         ) : (
@@ -179,11 +180,7 @@ function ReservationsListPage() {
 
       <Modal
         isOpen={openEdit}
-        title={
-          editing
-            ? `Editar Reserva #${getDisplayId(editing)}`
-            : "Editar Reserva"
-        }
+        title="Editar Reserva"
         onClose={() => {
           if (saving) return;
           setOpenEdit(false);

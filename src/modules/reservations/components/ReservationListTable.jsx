@@ -1,4 +1,3 @@
-import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 
 function badgeClasses(status) {
@@ -29,48 +28,11 @@ export default function ReservationListTable({
   onEdit,
   onDelete,
 }) {
-  const showConfirm = ({
-    title,
-    message,
-    confirmText,
-    confirmColor,
-    onConfirm,
-  }) => {
-    confirmAlert({
-      customUI: ({ onClose }) => {
-        return (
-          <div className="bg-white p-6 rounded-xl shadow-2xl max-w-md w-full border border-gray-100 text-left font-sans">
-            <h1 className="text-xl font-bold text-gray-900 mb-2">{title}</h1>
-            <p className="text-gray-600 mb-6 leading-relaxed">{message}</p>
-            <div className="flex justify-end gap-3">
-              <button
-                className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors focus:outline-none"
-                onClick={onClose}
-              >
-                Cancelar
-              </button>
-              <button
-                className={`px-5 py-2 text-white font-bold rounded-lg shadow-md transition-transform transform active:scale-95 focus:outline-none ${confirmColor}`}
-                onClick={() => {
-                  onConfirm();
-                  onClose();
-                }}
-              >
-                {confirmText}
-              </button>
-            </div>
-          </div>
-        );
-      },
-    });
-  };
-
   return (
     <div className="mt-4 overflow-x-auto">
-      <table className="w-full text-left border-collapse min-w-[800px]">
-        <thead className="border-b text-left text-sm text-gray-500">
+      <table className="w-full text-left border-collapse min-w-[700px]">
+        <thead className="border-b border-gray-200 text-left text-sm text-gray-500 dark:border-slate-800 dark:text-slate-400">
           <tr>
-            <th className="px-3 py-2">ID</th>
             <th className="px-3 py-2">Cliente</th>
             <th className="px-3 py-2">Email</th>
             <th className="px-3 py-2">Fecha</th>
@@ -85,13 +47,12 @@ export default function ReservationListTable({
           {reservations.map((r) => (
             <tr
               key={r.id || r._id}
-              className="border-b bg-white hover:bg-gray-50 transition-colors"
+              className="border-b border-gray-100 bg-white hover:bg-gray-50 transition-colors dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800/70"
             >
-              <td className="px-3 py-3 font-medium">#{r.id ?? "-"}</td>
-              <td className="px-3 py-3 font-semibold">
+              <td className="px-3 py-3 font-semibold dark:text-slate-100">
                 {r.clientName ?? r.client ?? "-"}
               </td>
-              <td className="px-3 py-3 text-gray-500">{r.email ?? "-"}</td>
+              <td className="px-3 py-3 text-gray-500 dark:text-slate-400">{r.email ?? "-"}</td>
               <td className="px-3 py-3">{r.date ? formatDate(r.date) : "-"}</td>
               <td className="px-3 py-3">{r.time ?? "-"}</td>
               <td className="px-3 py-3">{r.pax ?? r.people ?? "-"}</td>
@@ -106,7 +67,7 @@ export default function ReservationListTable({
               <td className="px-3 py-3">
                 <div className="flex justify-end gap-2">
                   <button
-                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                    className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors dark:text-slate-500 dark:hover:bg-blue-500/10 dark:hover:text-blue-300"
                     onClick={() => onEdit(r._id || r.id)}
                     title="Editar"
                   >
@@ -127,7 +88,7 @@ export default function ReservationListTable({
                   </button>
 
                   <button
-                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors dark:text-slate-500 dark:hover:bg-red-500/10 dark:hover:text-red-300"
                     onClick={() => onDelete(r._id || r.id)}
                     title="Eliminar"
                   >
@@ -154,8 +115,8 @@ export default function ReservationListTable({
           {!reservations.length && (
             <tr>
               <td
-                colSpan={8}
-                className="px-3 py-10 text-center text-sm text-gray-500"
+                colSpan={7}
+                className="px-3 py-10 text-center text-sm text-gray-500 dark:text-slate-400"
               >
                 No hay reservas para mostrar.
               </td>

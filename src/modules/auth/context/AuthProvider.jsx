@@ -36,9 +36,9 @@ function AuthProvider({ children }) {
   }
 }, [persistAuth]);
 
-  const signup = useCallback(async (username, email, password) => {
+  const signup = useCallback(async (username, email, password, phone = '') => {
   try {
-    const data = await authService.register(username, email, password);
+    const data = await authService.register(username, email, password, phone);
     persistAuth(data);
     return { error: null, role: data.user.role };
   } catch (err) {
@@ -47,7 +47,9 @@ function AuthProvider({ children }) {
 }, [persistAuth]);
 
   const signout = useCallback((redirectTo = '/') => {
-    localStorage.clear();
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    localStorage.removeItem('username');
     setAuthState({ token: null, role: null, username: null });
     window.location.href = redirectTo;
   }, []);
