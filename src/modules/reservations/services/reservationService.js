@@ -1,12 +1,18 @@
 import { instance } from '../../shared/api/axiosInstance';
 
+const normalizeReservationError = (err, fallbackMessage) => ({
+  message: err.response?.data?.message || fallbackMessage,
+  status: err.response?.status,
+  details: err.response?.data?.details || null,
+});
+
 // PÚBLICO — horarios disponibles
 export const getAvailableSlots = async (date) => {
   try {
     const { data } = await instance.get('/api/reservations/slots', { params: { date } });
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'No se pudieron cargar los horarios' };
+    return { data: null, error: normalizeReservationError(err, 'No se pudieron cargar los horarios') };
   }
 };
 
@@ -16,7 +22,7 @@ export const createReservation = async (reservationData) => {
     const { data } = await instance.post('/api/reservations', reservationData);
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Error al crear la reserva' };
+    return { data: null, error: normalizeReservationError(err, 'Error al crear la reserva') };
   }
 };
 
@@ -26,7 +32,7 @@ export const getMyReservations = async () => {
     const { data } = await instance.get('/api/reservations/my-reservations');
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Error al cargar tus reservas' };
+    return { data: null, error: normalizeReservationError(err, 'Error al cargar tus reservas') };
   }
 };
 
@@ -36,7 +42,7 @@ export const cancelMyReservation = async (id) => {
     const { data } = await instance.patch(`/api/reservations/${id}/cancel`);
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'No se pudo cancelar la reserva' };
+    return { data: null, error: normalizeReservationError(err, 'No se pudo cancelar la reserva') };
   }
 };
 
@@ -46,7 +52,7 @@ export const getReservations = async () => {
     const { data } = await instance.get('/api/reservations');
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Error al cargar reservas' };
+    return { data: null, error: normalizeReservationError(err, 'Error al cargar reservas') };
   }
 };
 
@@ -56,7 +62,7 @@ export const getReservationById = async (id) => {
     const { data } = await instance.get(`/api/reservations/${id}`);
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Reserva no encontrada' };
+    return { data: null, error: normalizeReservationError(err, 'Reserva no encontrada') };
   }
 };
 
@@ -66,7 +72,7 @@ export const updateReservation = async (id, updatedData) => {
     const { data } = await instance.put(`/api/reservations/${id}`, updatedData);
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Error al actualizar la reserva' };
+    return { data: null, error: normalizeReservationError(err, 'Error al actualizar la reserva') };
   }
 };
 
@@ -76,7 +82,7 @@ export const updateReservationStatus = async (id, status) => {
     const { data } = await instance.patch(`/api/reservations/${id}`, { status });
     return { data, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'No se pudo actualizar el estado' };
+    return { data: null, error: normalizeReservationError(err, 'No se pudo actualizar el estado') };
   }
 };
 
@@ -86,6 +92,6 @@ export const deleteReservation = async (id) => {
     await instance.delete(`/api/reservations/${id}`);
     return { data: true, error: null };
   } catch (err) {
-    return { data: null, error: err.response?.data?.message || 'Error al eliminar la reserva' };
+    return { data: null, error: normalizeReservationError(err, 'Error al eliminar la reserva') };
   }
 };    

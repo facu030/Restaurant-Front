@@ -1,9 +1,23 @@
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import { useAdminTheme } from '../hooks/useAdminTheme';
 
 const TrendChart = ({ data, title }) => {
+  const { isDark } = useAdminTheme();
+  const axisColor = isDark ? '#94a3b8' : '#9ca3af';
+  const gridColor = isDark ? 'rgba(148, 163, 184, 0.2)' : '#e5e7eb';
+  const tooltipStyle = {
+    backgroundColor: isDark ? '#0f172a' : '#fff',
+    border: isDark ? '1px solid #334155' : 'none',
+    borderRadius: '8px',
+    boxShadow: isDark
+      ? '0 10px 15px -3px rgb(0 0 0 / 0.35)'
+      : '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+    color: isDark ? '#e2e8f0' : '#111827',
+  };
+
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 h-full">
-      <h3 className="text-lg font-bold text-gray-800 mb-4">{title}</h3>
+    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 h-full dark:border-slate-800 dark:bg-slate-900">
+      <h3 className="text-lg font-bold text-gray-800 mb-4 dark:text-slate-100">{title}</h3>
       
       <div className=" w-full">
         <ResponsiveContainer width="100%" height={300}>
@@ -15,24 +29,25 @@ const TrendChart = ({ data, title }) => {
               </linearGradient>
             </defs>
             
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={gridColor} />
             
             <XAxis 
               dataKey="name" 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fill: '#9ca3af', fontSize: 12 }} 
+              tick={{ fill: axisColor, fontSize: 12 }} 
               dy={10}
             />
             
             <YAxis 
               axisLine={false} 
               tickLine={false} 
-              tick={{ fill: '#9ca3af', fontSize: 12 }} 
+              tick={{ fill: axisColor, fontSize: 12 }} 
             />
             
             <Tooltip 
-              contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+              contentStyle={tooltipStyle}
+              labelStyle={{ color: isDark ? '#f8fafc' : '#111827' }}
             />
             
             <Area 

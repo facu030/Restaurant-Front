@@ -3,6 +3,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import ReservationForm from '../../reservations/components/ReservationForm';
 import { getReservationById, updateReservation } from '../../reservations/services/reservationService';
 
+const getReservationErrorMessage = (error) => {
+  if (error?.details?.code === "SLOT_CAPACITY_EXCEEDED") {
+    const { time, remaining, requested, capacity } = error.details;
+    return `El horario ${time} tiene ${remaining} lugares disponibles y solicitaste ${requested}. Capacidad total: ${capacity}.`;
+  }
+
+  return error?.message || error || "Error desconocido";
+};
+
 export default function EditReservationPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -25,11 +34,11 @@ export default function EditReservationPage() {
 
 const onSubmit = async (values) => {
   setIsSaving(true);
-  const { error } = await updateReservation(Number(id), values); 
+  const { error } = await updateReservation(id, values); 
   setIsSaving(false);
 
   if (error) {
-    alert('Hubo un error al guardar los cambios: ' + error);
+    alert('Hubo un error al guardar los cambios: ' + getReservationErrorMessage(error));
     return;
   }
   navigate('/admin/reservations');
@@ -43,7 +52,7 @@ const onSubmit = async (values) => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-2">Editar Reserva #{id}</h1>
+      <h1 className="text-2xl font-bold text-gray-800 mb-2">Editar Reserva</h1>
       <p className="text-gray-500 mb-6">Modifica los detalles de la reserva seleccionada.</p>
 
       <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm max-w-2xl">

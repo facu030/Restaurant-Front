@@ -28,7 +28,7 @@ const UsersFilter = ({
         <input
           type="text"
           placeholder="Buscar..."
-          className="pl-10 w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm"
+          className="pl-10 w-full border border-gray-300 rounded-lg bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-amber-500 text-sm dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
         />
@@ -37,7 +37,7 @@ const UsersFilter = ({
       {/* 2. Filtros */}
       <div className="flex gap-2">
         <select
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
           value={roleFilter}
           onChange={(e) => onRoleChange(e.target.value)}
         >
@@ -47,7 +47,7 @@ const UsersFilter = ({
         </select>
 
         <select
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white"
+          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
           value={statusFilter}
           onChange={(e) => onStatusChange(e.target.value)}
         >

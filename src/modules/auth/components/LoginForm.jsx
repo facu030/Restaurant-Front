@@ -30,22 +30,21 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-amber-950">
-      <div className="w-auto max-w-4xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 rounded-lg shadow-lg overflow-hidden h-auto md:h-[60vh]">
-          <div className="relative px-6 py-10 md:pb-35 md:p-5 flex items-center bg-white text-black">
+    <div className="w-full max-w-4xl mx-auto [@media_(max-height:700px)]:max-w-md">
+        <div className="grid grid-cols-1 md:grid-cols-2 [@media_(max-height:700px)]:md:grid-cols-1 rounded-lg shadow-lg overflow-visible bg-white">
+          <div className="relative p-5 sm:p-6 md:p-7 [@media_(max-height:700px)]:md:p-5 flex items-center bg-white text-black rounded-lg md:rounded-r-none [@media_(max-height:700px)]:md:rounded-r-lg">
             <button
               type="button"
               onClick={() => navigate("/")}
               aria-label="Cerrar"
-              className="absolute right-4 top-4 md:hidden text-white bg-transparent p-2 rounded-full hover:bg-gray-100"
+              className="absolute right-4 top-4 md:hidden text-gray-500 bg-transparent p-2 rounded-full hover:bg-gray-100"
             >
               X
             </button>
             <div className="w-full max-w-md mx-auto md:mx-0">
-              <div className="mb-6 hidden md:block">
-                <h2 className="text-3xl font-extrabold mb-2">Bienvenido</h2>
-                <p className="text-gray-600 mb-6">
+              <div className="mb-4 hidden md:block [@media_(max-height:700px)]:mb-3">
+                <h2 className="text-3xl [@media_(max-height:700px)]:text-2xl font-extrabold mb-2">Bienvenido</h2>
+                <p className="text-gray-600 mb-0">
                   Ingresa tus credenciales para acceder al panel de
                   administración.
                 </p>
@@ -55,7 +54,7 @@ function LoginForm() {
               </div>
               <form
                 onSubmit={handleSubmit(onValid)}
-                className="flex flex-col gap-4"
+                className="flex flex-col gap-3"
               >
                 <Input
                   label="Usuario o Email"
@@ -79,12 +78,12 @@ function LoginForm() {
 
                 <Button
                   type="submit"
-                  className="w-full py-3 text-lg bg-accent-600 text-white hover:bg-accent-700 mt-3 pt-3"
+                  className="w-full py-2.5 text-base bg-accent-600 text-white hover:bg-accent-700 mt-1"
                 >
                   Iniciar Sesión
                 </Button>
                 <Button
-                  className="text-lg"
+                  className="text-base py-2.5"
                   type="button"
                   variant="secondary"
                   onClick={() => navigate("/register")}
@@ -92,11 +91,11 @@ function LoginForm() {
                   Registrarse
                 </Button>
 
-                <div className="hidden md:block mt-2 pt-5">
+                <div className="hidden md:block mt-1">
                   <button
                     type="button"
                     onClick={() => navigate("/")}
-                    className="text-sm px-3 py-1 rounded border w-full hover:bg-gray-50"
+                    className="text-sm px-3 py-2 rounded border w-full hover:bg-gray-50"
                   >
                     Volver al inicio
                   </button>
@@ -111,14 +110,13 @@ function LoginForm() {
             </div>
           </div>
 
-          <div className="hidden md:block h-full">
+          <div className="hidden md:block h-full [@media_(max-height:700px)]:hidden">
             <img
               src={imgDesktop}
               alt="Login"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-r-lg"
             />
           </div>
-        </div>
       </div>
     </div>
   );

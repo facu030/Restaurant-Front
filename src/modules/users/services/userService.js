@@ -24,18 +24,6 @@ export const getUserById = async (id) => {
   }
 };
 
-export const createUser = async (userData) => {
-  try {
-    const { data } = await instance.post("/api/users", userData);
-    return { data, error: null };
-  } catch (err) {
-    return {
-      data: null,
-      error: err.response?.data?.message || "Error al crear usuario",
-    };
-  }
-};
-
 export const updateUser = async (id, updatedFields) => {
   try {
     const { data } = await instance.put(`/api/users/${id}`, updatedFields);

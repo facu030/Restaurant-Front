@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   getAllUsers,
-  createUser as createUserService,
   updateUser as updateUserService,
   deleteUser as deleteUserService,
   suspendUser,
@@ -52,24 +51,14 @@ export const useUsers = () => {
     const { data, error } = await updateUserService(id, formData);
     if (error) {
       alert("Error al actualizar: " + error);
-      return;
+      return false;
     }
 
     const updatedUser = data.data || data.user || data;
     setUsers((prev) =>
       prev.map((u) => ((u._id || u.id) === id ? updatedUser : u)),
     );
-  };
-
-  const createUser = async (formData) => {
-    const { data, error } = await createUserService(formData);
-    if (error) {
-      alert("Error al crear usuario: " + error);
-      return;
-    }
-
-    const newUser = data.data || data.user || data;
-    setUsers((prev) => [...prev, newUser]);
+    return true;
   };
 
   return {
@@ -79,7 +68,6 @@ export const useUsers = () => {
     handleDeleteUser,
     handleStatusChange,
     updateUser,
-    createUser,
     refreshUsers: fetchUsers,
   };
 };

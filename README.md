@@ -230,7 +230,8 @@ VITE_BACKEND_URL=https://backend-restaurante-sigma.vercel.app
 | Variable | Descripción | Ejemplo |
 |---|---|---|
 | `MONGODB_URI` | URI de conexión a MongoDB Atlas | `mongodb+srv://user:pass@cluster.mongodb.net/db` |
-| `JWT_SECRET` | Clave secreta para firmar tokens JWT | `mi_clave_super_secreta` |
+| `JWT_SECRET` | Clave secreta para firmar tokens JWT | `change_me_in_local_env` |
+| `SLOT_CAPACITY` | Capacidad máxima de comensales por horario | `20` |
 | `PORT` | Puerto del servidor (local) | `3001` |
 
 ---

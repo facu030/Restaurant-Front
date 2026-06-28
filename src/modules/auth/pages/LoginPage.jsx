@@ -3,12 +3,17 @@ import LoginForm from '../components/LoginForm';
 function LoginPage() {
   return (
     <div className='
-      flex
-      flex-col
-      justify-center
+      min-h-screen
       bg-amber-950
-      h-[100dvh]
+      flex
+      items-start
       sm:items-center
+      justify-center
+      px-4
+      py-4
+      sm:py-6
+      md:py-8
+      overflow-y-auto
     '>
       <LoginForm />
     </div>
